@@ -16,11 +16,8 @@
 </div>
 
 ## Setup
-Clone the repository:
-
 ```sh
-$ git clone https://github.com/little-scripts/scanvulnpy.git
-$ (Coming soon)pip install scanvulnpy
+$ pip install scanvulnpy
 ```
 
 ### Usage
