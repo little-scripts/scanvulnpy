@@ -8,11 +8,11 @@
   <img alt="current version" src="https://img.shields.io/badge/linux-supported-success">
   <img alt="current version" src="https://img.shields.io/badge/windows-supported-success">
   <br>
-  <!-- <a target="_blank" rel="noopener noreferrer" href="https://pypi.org/project/scanvulnpy" title=""><img src="https://img.shields.io/pypi/v/scanvulnpy?color=informational" alt="pip package version"></a>
+  <a target="_blank" rel="noopener noreferrer" href="https://pypi.org/project/scanvulnpy" title=""><img src="https://img.shields.io/pypi/v/scanvulnpy?color=informational" alt="pip package version"></a>
   <img alt="latest commit on main" src="https://img.shields.io/docker/pulls/nwodtuhs/scanvulnpy.svg?label=downloads">
   <img alt="latest commit on main" src="https://img.shields.io/github/last-commit/little-scripts/scanvulnpy/main?label=latest%20release">
   <img alt="latest commit on dev" src="https://img.shields.io/github/last-commit/little-scripts/scanvulnpy/dev?label=latest%20dev">
-  <a target="_blank" rel="noopener noreferrer" href="https://img.shields.io/pypi/l/scanvulnpy?color=gree" title=""><img src="https://img.shields.io/pypi/l/scanvulnpy?color=gree" alt="PyPI - License"></a> -->
+  <a target="_blank" rel="noopener noreferrer" href="https://img.shields.io/pypi/l/scanvulnpy?color=gree" title=""><img src="https://img.shields.io/pypi/l/scanvulnpy?color=gree" alt="PyPI - License"></a>
 </div>
 
 ## Setup
@@ -60,5 +60,5 @@ Pull requests are welcome. Feel free to open an issue if you want to add other f
 
 ## References
 
-<!-- - https://pypi.org/project/scanvulnpy/ -->
+- https://pypi.org/project/scanvulnpy/
 - https://osv.dev

@@ -1,11 +1,11 @@
 [project]
 #
-# $ pip install Scanvulnpy
+# $ pip install scanvulnpy
 #
-# PyPI: https://pypi.org/little-scripts/Scanvulnpy/
+# PyPI: https://pypi.org/little-scripts/scanvulnpy/
 #
 
-name = "Scanvulnpy"
+name = "scanvulnpy"
 
 authors = [
   { name="little-scripts", email="little-scripts@example.com" },
@@ -43,11 +43,11 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/little-scripts/Scanvulnpy"
-"Issues" = "https://github.com/little-scripts/Scanvulnpy/issues"
-"Changelog" = "https://github.com/little-scripts/Scanvulnpy/blob/main/CHANGELOG.md"
+"Homepage" = "https://github.com/little-scripts/scanvulnpy"
+"Issues" = "https://github.com/little-scripts/scanvulnpy/issues"
+"Changelog" = "https://github.com/little-scripts/scanvulnpy/blob/main/CHANGELOG.md"
 "Funding" = "https://donate.pypi.org"
-"Source" = "https://github.com/little-scripts/Scanvulnpy"
+"Source" = "https://github.com/little-scripts/scanvulnpy"
 
 # Config flake8: check code source
 [tool.flake8]

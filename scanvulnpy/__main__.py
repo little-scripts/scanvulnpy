@@ -42,7 +42,7 @@ except ModuleNotFoundError as e:
 
 
 if not Utils.check_platform:
-    print("\nThe script doesn't support your platform for the moment !\nFeel free to report issues: https://github.com/little-scripts/Scanvulnpy/issues")
+    print("\nThe script doesn't support your platform for the moment !\nFeel free to report issues: https://github.com/little-scripts/scanvulnpy/issues")
     sys.exit(0)
 
 if __name__ == '__main__':
