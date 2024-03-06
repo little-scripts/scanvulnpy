@@ -1,0 +1,78 @@
+[project]
+#
+# $ pip install Scanvulnpy
+#
+# PyPI: https://pypi.org/little-scripts/Scanvulnpy/
+#
+
+name = "Scanvulnpy"
+
+authors = [
+  { name="little-scripts", email="little-scripts@example.com" },
+]
+
+# Versions
+version = "0.1.0.dev1"  # 0.1.0.dev1 | 0.1.0a1 | 0.1.0.b1 | 0.1.0rc | 0.1.0
+
+maintainers = [
+  {name = "little-scripts", email = "little-scripts@example.com"}
+]
+
+description = "A simple scan vulnerability PyPI Packages, the data provided by https://osv.dev."
+
+readme = "README.md"
+
+license = {file = "LICENSE"}
+
+requires-python = ">=3.8"
+
+dependencies = [
+  "requests>=2.31.0",
+  "rich>=13.7.1",
+]
+
+classifiers = [
+  "Development Status :: 3 - Alpha", # 3 - Alpha | 4 - Beta, 5 | Production/Stable
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Build Tools",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/little-scripts/Scanvulnpy"
+"Issues" = "https://github.com/little-scripts/Scanvulnpy/issues"
+"Changelog" = "https://github.com/little-scripts/Scanvulnpy/blob/main/CHANGELOG.md"
+"Funding" = "https://donate.pypi.org"
+"Source" = "https://github.com/little-scripts/Scanvulnpy"
+
+# Config flake8: check code source
+[tool.flake8]
+max-line-length = 88
+extend-ignore = "E203, W503"
+exclude = ".venv"
+
+# Config black: formatage automatique
+# [tool.black]
+# line-length = 88
+# target-version = ["py38"]
+# exclude = '''
+# /(
+#   \.git
+# | \.hg
+# | \.mypy_cache
+# | \.tox
+# | \.venv
+# | _build
+# | buck-out
+# | build
+# | dist
+# )/
+# '''
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
