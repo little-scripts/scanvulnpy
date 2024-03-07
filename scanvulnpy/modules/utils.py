@@ -106,24 +106,23 @@ class Utils:
             return False
 
     def get_requirements(self):
-        """get_requirements"""
+        """
+        Retrieves the list of packages from the requirements file.
 
+        Returns:
+            list: List of package names and versions.
+        """
+        # Get the path to the requirements file from the configuration
         path_requirements = self.config.requirements
-        # If no requirements file, freeze PyPI packages on local environnement
-        if not self.config.requirements and self.config.freeze:
-            tmp_dir = tempfile.gettempdir()
-            if os.path.exists(tmp_dir):
-                if self.platform_os == 'nt':
-                    path_requirements = tmp_dir + '\\requirements.txt'
-                elif self.platform_os == 'posix':
-                    path_requirements = tmp_dir + '/requirements.txt'
-            cmd = f'pip freeze > {path_requirements}'
-            os.system(cmd)
-
-        Logger.info(self, f"Get packages requirements: {path_requirements}") # type: ignore
-
-        with open(path_requirements, "r", encoding="utf-8") as file:
-            packages = file.readlines()
-        file.close()
+        # If no requirements file specified and freezing packages is enabled
+        if not path_requirements and self.config.freeze:
+            # Use 'pip freeze' command to generate requirements list with installed packages
+            cmd = 'pip freeze'
+            output = os.popen(cmd).read()
+            packages = output.split('\n')
+        else:
+            # Read the requirements file and return the list of packages
+            with open(path_requirements, "r", encoding="utf-8") as file:
+                packages = file.readlines()
 
         return packages
