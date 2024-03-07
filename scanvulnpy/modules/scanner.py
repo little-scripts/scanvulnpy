@@ -32,16 +32,41 @@ class Scanner:
         self.config=config
 
     def set_payload(self, package):
-        """set_payload"""
+        """
+        Sets the payload for a given package.
+
+        Args:
+            package (str): The name and version of the package.
+
+        Returns:
+            tuple: A tuple containing the payload and the package version.
+        """
         try:
-            package = package.strip().split('==')
-            version = package[1].strip()
-            package = package[0]
-            payload = {"version": f"{version}", "package": {"name": f"{package}", "ecosystem": "PyPI"}}
+            # Checks if the package is specified with a version
+            if re.match('.*>=.*', package):
+                package = package.strip().split('>=')
+            elif re.match('.*<=.*', package):
+                package = package.strip().split('<=')
+            elif re.match('.*==.*', package):
+                package = package.strip().split('==')
+            else:
+                # If no version is specified, use the latest available version
+                package = package.strip().split()
+
+            # Retrieves the package name and version
+            package_name = package[0]
+            version = package[1]
+
+            # Creates the payload with the package name, version, and ecosystem (PyPI)
+            payload = {"version": f"{version}", "package": {"name": f"{package_name}", "ecosystem": "PyPI"}}
+
         except Exception:
+            # In case of error, use the package name only without specifying the version
             package = package[0]
             version = None
             payload = {"package": {"name": f"{package}", "ecosystem": "PyPI"}}
+
+        print(payload)
         return payload, version
 
     def log_run(self, response, package, version, count_vuln, count_ok, list_packages_vuln, list_packages_ok):
