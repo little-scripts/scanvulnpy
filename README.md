@@ -1,26 +1,38 @@
 # scanvulnpy
 
-<!-- ![](./.github/banners/banner-0.1.0.dev1.png) -->
 
 <div align="center">
-  <img alt="Python3.7" src="https://img.shields.io/badge/Python-3.7+-informational">
-  <a target="_blank" rel="noopener noreferrer" href="https://github.com/little-scripts/scanvulnpy/actions/workflows/tests.yml/badge.svg?branch=main" title=""><img src="https://github.com/little-scripts/scanvulnpy/actions/workflows/tests.yml/badge.svg?branch=main" alt="Tests"></a>
-  <img alt="current version" src="https://img.shields.io/badge/linux-supported-success">
-  <img alt="current version" src="https://img.shields.io/badge/windows-supported-success">
+  <a target="_blank" rel="noopener noreferrer" href="https://pypi.org/project/scanvulnpy" title="">
+    <img  alt="pip package version" src="https://img.shields.io/pypi/v/scanvulnpy?color=informational">
+  </a>
+  <a target="_blank" rel="noopener noreferrer" href="https://pypi.org/project/scanvulnpy" title="">
+    <img alt="Python3.7" src="https://img.shields.io/badge/Python-3.7+-informational">
+  </a>
+  <a target="_blank" rel="noopener noreferrer" href="https://pypi.org/project/scanvulnpy" title="">
+    <img  alt="PyPI Downloads" src="https://img.shields.io/pypi/dm/scanvulnpy.svg?label=PyPI%20downloads">
+  </a>
   <br>
-  <a target="_blank" rel="noopener noreferrer" href="https://pypi.org/project/scanvulnpy" title=""><img src="https://img.shields.io/pypi/v/scanvulnpy?color=informational" alt="pip package version"></a>
-  <img alt="latest commit on main" src="https://img.shields.io/github/last-commit/little-scripts/scanvulnpy/main?label=latest%20release">
-  <img alt="latest commit on dev" src="https://img.shields.io/github/last-commit/little-scripts/scanvulnpy/dev?label=latest%20dev">
+  <a target="_blank" rel="noopener noreferrer" href="https://github.com/little-scripts/scanvulnpy/actions/workflows/tests.yml/badge.svg?branch=main" title="">
+    <img alt="Tests" src="https://github.com/little-scripts/scanvulnpy/actions/workflows/tests.yml/badge.svg?branch=main">
+  </a>
+  <img alt="Linux supported" src="https://img.shields.io/badge/linux-supported-success">
+  <img alt="Windows supported" src="https://img.shields.io/badge/windows-supported-success">
+  <br>
+  <img alt="Latest release" src="https://img.shields.io/github/last-commit/little-scripts/scanvulnpy/main?label=latest%20release">
+  <img alt="Latest dev" src="https://img.shields.io/github/last-commit/little-scripts/scanvulnpy/dev?label=latest%20dev">
+  <br>
 </div>
 
-## Setup
+scanvulnpy is a Python package to scan vulnerability PyPI Packages, the data provided by https://osv.dev.
+
+## Installation from sources
 ```sh
 $ pip install scanvulnpy
 ```
 
 ### Usage
 ```sh
-$ python -m scanvulnpy -r <path>
+$ python -m scanvulnpy
 ```
 
 You can find here a complete list of options :
@@ -45,15 +57,15 @@ Build and Run the Docker image:
 
 ```sh
 $ git clone https://github.com/little-scripts/scanvulnpy.git
-$ ./scanvulnpy.sh
+$ ./scanvulnpy.sh --run
 ```
 
-## Contributing
+## License
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/little-scripts/scanvulnpy/blob/main/LICENSE)
 
+## Contributing
 Pull requests are welcome. Feel free to open an issue if you want to add other features.
 
-
 ## References
-
 - https://pypi.org/project/scanvulnpy/
 - https://osv.dev
