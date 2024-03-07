@@ -50,7 +50,7 @@ class Scanner:
             elif re.match('.*==.*', package):
                 package = package.strip().split('==')
             else:
-                # If no version is specified, use the latest available version
+                # If no version is specified
                 package = package.strip().split()
 
             # Retrieves the package name and version
@@ -66,7 +66,6 @@ class Scanner:
             version = None
             payload = {"package": {"name": f"{package}", "ecosystem": "PyPI"}}
 
-        print(payload)
         return payload, version
 
     def log_run(self, response, package, version, count_vuln, count_ok, list_packages_vuln, list_packages_ok):
