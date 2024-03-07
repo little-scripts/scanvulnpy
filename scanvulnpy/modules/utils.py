@@ -19,72 +19,51 @@
 Module Utils
 """
 
-import sys
 import os
-import platform
-import tempfile
-from .logger import Logger
 
 
 class Utils:
-    """Controller class for Scanner."""
+    """Controller class for Utils."""
 
     def __init__(self, config) -> None:
         self.config=config
         self.platform_os = os.name
 
-    def is_platform_windows(self):
+    @staticmethod
+    def is_platform_windows():
         """
-        Checking if the running platform is windows.
+        Check if the platform is Windows.
 
         Returns
         -------
         bool
-            ["win32", "cygwin"] if the running platform is windows.
+            True if the platform is Windows, False otherwise.
         """
-        if platform.system().lower() == 'windows':
-            return True
+        return os.name == 'nt'
 
-
-    def is_platform_linux(self):
+    @staticmethod
+    def is_platform_linux():
         """
-        Checking if the running platform is linux.
+        Check if the platform is Linux.
 
         Returns
         -------
         bool
-            linux if the running platform is linux.
+            True if the platform is Linux, False otherwise.
         """
-        if platform.system().lower() == 'linux':
-            return True
+        return os.name == 'posix' and os.uname().sysname == 'Linux'
 
-
-    def is_platform_mac(self):
+    @staticmethod
+    def is_platform_mac():
         """
-        Checking if the running platform is mac.
+        Check if the platform is macOS.
 
         Returns
         -------
         bool
-            darwin if the running platform is mac.
+            True if the platform is macOS, False otherwise.
         """
-        return sys.platform == 'darwin'
-
-
-    def is_platform_arm(self):
-        """
-        Checking if the running platform use ARM architecture.
-
-        Returns
-        -------
-        bool
-            True if the running platform uses ARM architecture.
-        """
-        is_platform = platform.machine() in ("arm64", "aarch64") or platform.machine().startswith(
-            "armv"
-        )
-        return is_platform
-
+        return os.name == 'posix' and os.uname().sysname == 'Darwin'
 
     def check_platform(self):
         """
@@ -99,31 +78,30 @@ class Utils:
         if platform_os == 'nt':
             return Utils.is_platform_windows
         elif platform_os == 'posix':
-            return Utils.is_platform_linux
-        elif platform_os == 'posix':
-            return Utils.is_platform_mac
-        else:
-            return False
+            if Utils.is_platform_linux():
+                return "Linux"
+            elif Utils.is_platform_mac():
+                return "macOS"
+        return False
 
     def get_requirements(self):
-        """get_requirements"""
+        """
+        Retrieves the list of packages from the requirements file.
 
+        Returns:
+            list: List of package names and versions.
+        """
+        # Get the path to the requirements file from the configuration
         path_requirements = self.config.requirements
-        # If no requirements file, freeze PyPI packages on local environnement
-        if not self.config.requirements and self.config.freeze:
-            tmp_dir = tempfile.gettempdir()
-            if os.path.exists(tmp_dir):
-                if self.platform_os == 'nt':
-                    path_requirements = tmp_dir + '\\requirements.txt'
-                elif self.platform_os == 'posix':
-                    path_requirements = tmp_dir + '/requirements.txt'
-            cmd = f'pip freeze > {path_requirements}'
-            os.system(cmd)
-
-        Logger.info(self, f"Get packages requirements: {path_requirements}") # type: ignore
-
-        with open(path_requirements, "r", encoding="utf-8") as file:
-            packages = file.readlines()
-        file.close()
+        # If no requirements file specified and freezing packages is enabled
+        if not path_requirements and self.config.freeze:
+            # Use 'pip freeze' command to generate requirements list with installed packages
+            cmd = 'pip freeze'
+            output = os.popen(cmd).read()
+            packages = output.split('\n')
+        else:
+            # Read the requirements file and return the list of packages
+            with open(path_requirements, "r", encoding="utf-8") as file:
+                packages = file.readlines()
 
         return packages
