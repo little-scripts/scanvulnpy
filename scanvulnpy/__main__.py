@@ -41,17 +41,14 @@ if not Utils.check_platform:
     print("\nThe script doesn't support your platform for the moment !\nFeel free to report issues: https://github.com/little-scripts/scanvulnpy/issues")
     sys.exit(0)
 
+
 if __name__ == '__main__':
-
     try:
-
         config = cmd_options()
         console = get_options()
         print_banner(console, __author__, __version__)
         packages = Utils(config).get_requirements()
-        count_vuln, count_ok, list_packages_vuln, list_packages_ok = Scanner(config).run(packages)
-        Scanner(config).log_final(count_vuln, count_ok, list_packages_vuln, list_packages_ok)
-
+        Scanner(config).run(packages)
     except Exception as e:
         print("Exception:", e)
         sys.exit(1)

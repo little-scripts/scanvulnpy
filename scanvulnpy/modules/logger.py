@@ -20,7 +20,6 @@ Module logger
 """
 
 import logging
-from datetime import datetime
 
 
 class Logger:
@@ -30,25 +29,61 @@ class Logger:
         pass
 
     def info(self, message) -> None:
-        """docstring
         """
-        current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+        Logs an info message.
+
+        Parameters
+        ----------
+        message : str
+            The info message to log.
+        """
+        # Configure the logger
         logger = logging.getLogger(__name__)
-        logging.basicConfig(level=logging.INFO)
-        logger.info("%s: %s", current_date, message)
+        logging.basicConfig(
+            format="%(asctime)s | %(levelname)s | %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+            level=logging.INFO,
+        )
+
+        # Log the info message with timestamp
+        logger.info("%s",message)
 
     def warning(self, message) -> None:
-        """docstring
         """
-        current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+        Logs an warning message.
+
+        Parameters
+        ----------
+        message : str
+            The warning message to log.
+        """
+        # Configure the logger
         logger = logging.getLogger(__name__)
-        logging.basicConfig(level=logging.WARNING)
-        logger.warning("%s: %s", current_date, message)
+        logging.basicConfig(
+            format="%(asctime)s | %(levelname)s | %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+            level=logging.WARNING,
+        )
+
+        # Log the warning message with timestamp
+        logger.warning("%s",message)
 
     def error(self, message) -> None:
-        """docstring
         """
-        current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+        Logs an error message.
+
+        Parameters
+        ----------
+        message : str
+            The error message to log.
+        """
+        # Configure the logger
         logger = logging.getLogger(__name__)
-        logging.basicConfig(level=logging.ERROR)
-        logger.error("%s: %s", current_date, message)
+        logging.basicConfig(
+            format="%(asctime)s | %(levelname)s | %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+            level=logging.ERROR,
+        )
+
+        # Log the warning message with timestamp
+        logger.error("%s",message)

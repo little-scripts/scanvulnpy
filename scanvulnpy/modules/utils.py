@@ -19,72 +19,51 @@
 Module Utils
 """
 
-import sys
 import os
-import platform
-import tempfile
-from .logger import Logger
 
 
 class Utils:
-    """Controller class for Scanner."""
+    """Controller class for Utils."""
 
     def __init__(self, config) -> None:
         self.config=config
         self.platform_os = os.name
 
-    def is_platform_windows(self):
+    @staticmethod
+    def is_platform_windows():
         """
-        Checking if the running platform is windows.
+        Check if the platform is Windows.
 
         Returns
         -------
         bool
-            ["win32", "cygwin"] if the running platform is windows.
+            True if the platform is Windows, False otherwise.
         """
-        if platform.system().lower() == 'windows':
-            return True
+        return os.name == 'nt'
 
-
-    def is_platform_linux(self):
+    @staticmethod
+    def is_platform_linux():
         """
-        Checking if the running platform is linux.
+        Check if the platform is Linux.
 
         Returns
         -------
         bool
-            linux if the running platform is linux.
+            True if the platform is Linux, False otherwise.
         """
-        if platform.system().lower() == 'linux':
-            return True
+        return os.name == 'posix' and os.uname().sysname == 'Linux'
 
-
-    def is_platform_mac(self):
+    @staticmethod
+    def is_platform_mac():
         """
-        Checking if the running platform is mac.
+        Check if the platform is macOS.
 
         Returns
         -------
         bool
-            darwin if the running platform is mac.
+            True if the platform is macOS, False otherwise.
         """
-        return sys.platform == 'darwin'
-
-
-    def is_platform_arm(self):
-        """
-        Checking if the running platform use ARM architecture.
-
-        Returns
-        -------
-        bool
-            True if the running platform uses ARM architecture.
-        """
-        is_platform = platform.machine() in ("arm64", "aarch64") or platform.machine().startswith(
-            "armv"
-        )
-        return is_platform
-
+        return os.name == 'posix' and os.uname().sysname == 'Darwin'
 
     def check_platform(self):
         """
@@ -99,11 +78,11 @@ class Utils:
         if platform_os == 'nt':
             return Utils.is_platform_windows
         elif platform_os == 'posix':
-            return Utils.is_platform_linux
-        elif platform_os == 'posix':
-            return Utils.is_platform_mac
-        else:
-            return False
+            if Utils.is_platform_linux():
+                return "Linux"
+            elif Utils.is_platform_mac():
+                return "macOS"
+        return False
 
     def get_requirements(self):
         """
