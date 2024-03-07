@@ -33,9 +33,9 @@ dependencies = [
 
 classifiers = [
   "Development Status :: 3 - Alpha", # 3 - Alpha | 4 - Beta, 5 | Production/Stable
-  "Environment :: Console"
+  "Environment :: Console",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: Apache 2.0",
+  "License :: OSI Approved :: Apache Software License",
   "Topic :: Software Development :: Build Tools",
   "Programming Language :: Python :: 3.7",
   "Programming Language :: Python :: 3.8",
