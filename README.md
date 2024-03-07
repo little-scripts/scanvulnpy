@@ -50,7 +50,7 @@ options:
   -nc              Disable colors.
 ```
 
-### Docker setup
+## Docker setup
 
 ### Usage
 Build and Run the Docker image:
