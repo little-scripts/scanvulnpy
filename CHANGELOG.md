@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 0.1.0a1 (2024-03-07)
+## 0.1.0a2 (2024-03-07)
 ### Bug fix
 - if a package is specified with a version or not
 
