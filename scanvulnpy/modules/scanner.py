@@ -69,46 +69,100 @@ class Scanner:
         return payload, version
 
     def log_run(self, response, package, version, count_vuln, count_ok, list_packages_vuln, list_packages_ok):
-        """log_run"""
+        """
+        Logs the result of scanning a single package.
+
+        Args:
+            response (Response): HTTP response object from the vulnerability scan.
+            package (str): Name of the package being scanned.
+            version (str): Version of the package being scanned (if available).
+            count_vuln (int): Number of vulnerable packages.
+            count_ok (int): Number of non-vulnerable packages.
+            list_packages_vuln (list): List of vulnerable packages.
+            list_packages_ok (list): List of non-vulnerable packages.
+
+        Returns:
+            tuple: A tuple containing updated counts of vulnerable and non-vulnerable packages,
+            and updated lists of vulnerable and non-vulnerable packages.
+        """
+        # Check if the response contains vulnerability information
         if response.text != '{}':
-            count_vuln +=1
+            count_vuln += 1
             list_packages_vuln.append(package)
+            # Log vulnerability details
             if version:
                 Logger.warning(self, f"Vulnerability in package: {package} | {response.text}") # type: ignore
             else:
-                Logger.warning(self, f"Vulnerabilitys in package: {package} | But we can't find a version in your requirements ! To be sure your version is not vulnerable, recheck with version in requirements(e.g request==2.31.0).") # type: ignore
+                Logger.warning(self, f"Vulnerabilities in package: {package} | But we can't find a version in your requirements! To ensure your version is not vulnerable, recheck with version in requirements (e.g., request==2.31.0).") # type: ignore
+        # If no vulnerabilities found and response is successful
         elif response.text == '{}' and response.status_code == 200:
-            count_ok +=1
+            count_ok += 1
             list_packages_ok.append(package)
             Logger.info(self, f"Scan package: {package}") # type: ignore
+
         return count_ok, count_vuln, list_packages_vuln, list_packages_ok
 
     def log_final(self, count_vuln, count_ok, list_packages_vuln, list_packages_ok):
-        """log_run"""
+        """
+        Logs the final results of the vulnerability scan.
+
+        Args:
+            count_vuln (int): Number of vulnerable packages.
+            count_ok (int): Number of non-vulnerable packages.
+            list_packages_vuln (list): List of vulnerable packages.
+            list_packages_ok (list): List of non-vulnerable packages.
+        """
+        # Calculate total packages and total vulnerabilities
         total_packages = count_ok + count_vuln
         total_vulns = total_packages - count_ok
+
+        # Log the final results based on the number of vulnerabilities found
         if count_vuln == 0:
+            # Log if no vulnerabilities found
             Logger.info(self, f"Total packages: {total_packages}") # type: ignore
             Logger.info(self, f"Package(s) vulnerable: {total_vulns}") # type: ignore
             Logger.info(self, f"List packages scanned: {list_packages_ok} ") # type: ignore
         else:
+            # Log if vulnerabilities found
             Logger.info(self, f"Total packages: {total_packages}") # type: ignore
             Logger.info(self, f"{count_ok} Package(s) ok: {list_packages_ok} ") # type: ignore
             Logger.warning(self, f"{total_vulns} Package(s) vulnerable:: {list_packages_vuln} ") # type: ignore
 
     def run(self, packages):
-        """main"""
-        url='https://api.osv.dev/v1/query'
+        """
+        Runs the vulnerability scan for the given packages.
+
+        Args:
+            packages (list): List of PyPI packages to scan.
+
+        Returns:
+            tuple: A tuple containing counts of vulnerable and non-vulnerable packages,
+            and lists of vulnerable and non-vulnerable packages.
+        """
+        # API endpoint for vulnerability scanning
+        url = 'https://api.osv.dev/v1/query'
+
+        # Initialize counters and lists to store results
         count_ok = 0
         count_vuln = 0
         list_packages_ok = []
         list_packages_vuln = []
+
+        # Log start of the scan
         Logger.info(self, "Start scan vulnerability PyPI packages.") # type: ignore
         Logger.info(self, "In progress, this may take few seconds...") # type: ignore
+
+        # Iterate over packages and scan each one
         for package in packages:
             package = package.strip()
+            # Check if the package name contains alphanumeric characters
             if re.match('.*[a-z0-9].*', package):
+                # Set payload for the package
                 payload, version = Scanner(self.config).set_payload(package)
+                # Send POST request to the API endpoint
                 response = requests.post(url, json=payload, headers={'content-type': 'application/json'}, timeout=10)
+                # Log the scan results and update counters and lists
                 count_ok, count_vuln, list_packages_vuln, list_packages_ok = Scanner(self.config).log_run(response, package, version, count_vuln, count_ok, list_packages_vuln, list_packages_ok)
+
+        # Return the scan results
         return count_vuln, count_ok, list_packages_vuln, list_packages_ok
