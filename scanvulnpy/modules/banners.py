@@ -21,12 +21,17 @@ Module banner
 
 """
 
-
-from platform import system
-from os import get_terminal_size
-from rich.align import Align
-from rich.panel import Panel
-from rich.text import Text
+import sys
+try:
+    from platform import system
+    from os import get_terminal_size
+    from rich.align import Align
+    from rich.panel import Panel
+    from rich.text import Text
+except ModuleNotFoundError as e:
+    print("Mandatory dependencies are missing:", e)
+    print("Install: python -m pip install --upgrade <module-named>")
+    sys.exit(1)
 
 
 def get_terminal_width() -> int:

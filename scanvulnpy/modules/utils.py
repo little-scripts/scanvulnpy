@@ -51,7 +51,7 @@ class Utils:
         bool
             True if the platform is Linux, False otherwise.
         """
-        return os.name == 'posix' and os.uname().sysname == 'Linux'
+        return os.name == 'posix'
 
     @staticmethod
     def is_platform_mac():
@@ -78,11 +78,9 @@ class Utils:
         if platform_os == 'nt':
             return Utils.is_platform_windows
         elif platform_os == 'posix':
-            if Utils.is_platform_linux():
-                return "Linux"
-            elif Utils.is_platform_mac():
-                return "macOS"
-        return False
+            return Utils.is_platform_linux()
+        else:
+            return False
 
     def get_requirements(self):
         """
