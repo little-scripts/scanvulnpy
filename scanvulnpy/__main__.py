@@ -20,9 +20,11 @@
 A simple scan vulnerability PyPI Packages, the data provided by https://osv.dev
 """
 
+import sys
+import os
+
 try:
-    import os
-    import sys
+    from .modules.loggers import Level
     from .modules.utils import Utils
     from .modules.scanner import Scanner
     from .modules.banners import print_banner
@@ -33,7 +35,7 @@ try:
     )
 except ModuleNotFoundError as e:
     print("Mandatory dependencies are missing:", e)
-    print("Install: python -m pip install --upgrade -r requirements.txt")
+    print("Install: python -m pip install --upgrade <module-named>")
     sys.exit(1)
 
 
@@ -49,6 +51,7 @@ if __name__ == '__main__':
         print_banner(console, __author__, __version__)
         packages = Utils(config).get_requirements()
         Scanner(config).run(packages)
+
     except Exception as e:
         print("Exception:", e)
         sys.exit(1)

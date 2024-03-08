@@ -1,0 +1,11 @@
+[coverage:run]
+branch = True
+omit =
+    # omit anything in a "tests" directory anywhere
+
+[coverage:report]
+show_missing = False
+skip_covered = False
+
+[tool.coverage.run]
+disable_warnings = ['no-data-collected']
