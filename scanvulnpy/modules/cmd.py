@@ -20,9 +20,14 @@ Module cmd
 
 """
 
-import argparse
-from rich.console import Console
-
+import sys
+try:
+    import argparse
+    from rich.console import Console
+except ModuleNotFoundError as e:
+    print("Mandatory dependencies are missing:", e)
+    print("Install: python -m pip install --upgrade <module-named>")
+    sys.exit(1)
 
 def cmd_options():
     """ Get options
@@ -57,6 +62,14 @@ def cmd_options():
         default=True,
         required=False,
         help="verbose (e.g. -v False)",
+    )
+
+    parser.add_argument(
+        "--json",
+        dest="verbose",
+        default=False,
+        required=False,
+        help="verbose (e.g. --json True)",
     )
 
     parser.add_argument(

@@ -20,10 +20,16 @@
 Module Scanner
 """
 
-import re
-import requests
-from .logger import Logger
+import sys
+try:
+    import re
+    import requests
+except ModuleNotFoundError as e:
+    print("Mandatory dependencies are missing:", e)
+    print("Install: python -m pip install --upgrade <module-named>")
+    sys.exit(1)
 
+from .loggers import Level
 
 class Scanner:
     """Controller class for Scanner."""
@@ -52,11 +58,11 @@ class Scanner:
         elif re.match('.*>=.*', package):
             payload = None
             version = None
-            Logger.error(self, f"Scan: {package}. We can't determinate version! Retry with a specific version in requirements(e.g., request==2.31.0).") # type: ignore
+            Level.error(self, f"{package} ! Retry with a specific version(e.g., request==2.31.0) in your requirements.") # type: ignore
         elif re.match('.*<=.*', package):
             payload = None
             version = None
-            Logger.error(self, f"Scan: {package}. We can't determinate version! Retry with a specific version in requirements(e.g., request==2.31.0).") # type: ignore
+            Level.error(self, f"{package} ! Retry with a specific version(e.g., request==2.31.0) in your requirements.") # type: ignore
         else:
             # If no version is specified
             package = package.strip().split()
@@ -90,14 +96,14 @@ class Scanner:
             list_packages_vuln.append(package)
             # Log vulnerability details
             if version:
-                Logger.warning(self, f"Vulnerability found: {payload} !") # type: ignore
+                Level.warning(self, payload) # type: ignore
             else:
-                Logger.warning(self, f"Vulnerability found: {payload} ! We can't determinate if your version is affected. Retry with a specific version(e.g., request==2.31.0).") # type: ignore
+                Level.warning(self, f"{payload}...We can't determinate if your version is affected. Retry with a specific version(e.g., request==2.31.0) in your requirements.") # type: ignore
         # If no vulnerabilities found and response is successful
         elif response.text == '{}' and response.status_code == 200:
             count_ok += 1
             list_packages_ok.append(package)
-            Logger.info(self, f"No vulnerability found: {payload}") # type: ignore
+            Level.info(self, f'Scan: {payload}') # type: ignore
 
         return count_ok, count_vuln, list_packages_vuln, list_packages_ok
 
@@ -118,14 +124,14 @@ class Scanner:
         # Log the final results based on the number of vulnerabilities found
         if count_vuln == 0:
             # Log if no vulnerabilities found
-            Logger.info(self, f"Package(s) scanned: {total_packages}") # type: ignore
-            Logger.info(self, f"Package(s) vulnerable: {total_vulns}") # type: ignore
-            Logger.info(self, f"Package(s) scanned: {list_packages_ok} ") # type: ignore
+            Level.info(self, f"{total_packages} Package(s) scanned") # type: ignore
+            Level.info(self, f"{total_vulns} Package(s) vulnerable") # type: ignore
+            Level.info(self, f"Package(s) non-vulnerable: {list_packages_ok}") # type: ignore
         else:
             # Log if vulnerabilities found
-            Logger.info(self, f"Package(s) scanned: {total_packages}") # type: ignore
-            Logger.info(self, f"Package(s) ok: {count_ok} {list_packages_ok} ") # type: ignore
-            Logger.warning(self, f"Package(s) vulnerable: {total_vulns} {list_packages_vuln} ") # type: ignore
+            Level.info(self, f"{total_packages} Package(s) scanned") # type: ignore
+            Level.info(self, f"{count_ok} Package(s) non-vulnerable: {list_packages_ok}") # type: ignore
+            Level.warning(self, f"{total_vulns} Package(s) vulnerable: {list_packages_vuln}") # type: ignore
 
     def run(self, packages):
         """
@@ -148,8 +154,8 @@ class Scanner:
         list_packages_vuln = []
 
         # Log start of the Scan
-        Logger.info(self, "Start Scan vulnerability PyPI packages.") # type: ignore
-        Logger.info(self, "In progress, this may take few seconds...") # type: ignore
+        Level.info(self, "Start Scan vulnerability PyPI packages. The data provided by https://osv.dev") # type: ignore
+        Level.info(self, "In progress, this may take few seconds...") # type: ignore
 
         # Iterate over packages and Scan each one
         for package in packages:
