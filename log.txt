@@ -1,0 +1,8 @@
++-----------------------------------------------------------------------------+
+|                                                                             |
+|              A simple wrapper to scan vulnerability PyPI Packages,          |
+|                      the data provided by https://osv.dev                   |
+|                                                                             |
+|                                                                             |
++-------------- By:little-scripts developers | Version:0.1.0.b1 --------------+
+

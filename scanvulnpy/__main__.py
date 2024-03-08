@@ -20,9 +20,10 @@
 A simple scan vulnerability PyPI Packages, the data provided by https://osv.dev
 """
 
+import sys
+
 try:
     import os
-    import sys
     from .modules.utils import Utils
     from .modules.scanner import Scanner
     from .modules.banners import print_banner
@@ -49,6 +50,7 @@ if __name__ == '__main__':
         print_banner(console, __author__, __version__)
         packages = Utils(config).get_requirements()
         Scanner(config).run(packages)
+
     except Exception as e:
         print("Exception:", e)
         sys.exit(1)
