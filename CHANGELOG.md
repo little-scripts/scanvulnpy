@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 0.1.0.b2 (2024-03-08)
+### Improvement
+- New style logs
+
 ## 0.1.0.b1 (2024-03-07)
 ### Improvement
 - Stores the list of packages in a variable, avoids writing to a file requirements

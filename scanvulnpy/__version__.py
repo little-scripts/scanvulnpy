@@ -19,7 +19,7 @@
 
 __title__ = "scanvulnpy"
 __description__ = "A simple scan vulnerability PyPI Packages, the data provided by https://osv.dev"
-__version__ = "0.1.0.b1"  # 0.1.0.dev1 | 0.1.0a1 | 0.1.0.b1 | 0.1.0rc | 0.1.0
+__version__ = "0.1.0.b2"  # 0.1.0.dev1 | 0.1.0a1 | 0.1.0.b1 | 0.1.0rc | 0.1.0
 __author__ = "little-scripts developers"
 __license__ = "Apache 2.0"
 __copyright__ = "Copyright little-scripts"
