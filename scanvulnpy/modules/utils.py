@@ -74,10 +74,9 @@ class Utils:
         bool
             True if the running platform available.
         """
-        platform_os = os.name
-        if platform_os == 'nt':
+        if self.platform_os == 'nt':
             return Utils.is_platform_windows
-        elif platform_os == 'posix':
+        elif self.platform_os == 'posix':
             return Utils.is_platform_linux()
         else:
             return False

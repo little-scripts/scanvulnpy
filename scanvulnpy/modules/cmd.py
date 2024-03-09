@@ -32,7 +32,7 @@ except ModuleNotFoundError as e:
 def cmd_options():
     """ Get options
     """
-    description = "A simple wrapper to Scan vulnerability PyPI Packages, the data provided by https://osv.dev"
+    description = "A simple wrapper to scan vulnerability PyPI Packages, the data provided by https://osv.dev"
 
     parser = argparse.ArgumentParser(
         description=description,
@@ -59,17 +59,9 @@ def cmd_options():
     parser.add_argument(
         "-v",
         dest="verbose",
-        default=True,
-        required=False,
-        help="verbose (e.g. -v False)",
-    )
-
-    parser.add_argument(
-        "--json",
-        dest="verbose",
         default=False,
         required=False,
-        help="verbose (e.g. --json True)",
+        help="verbose details vulns(e.g. -v vulns)",
     )
 
     parser.add_argument(
@@ -87,9 +79,9 @@ def cmd_options():
 def get_options():
     """ Get options
     """
-    cmd = cmd_options()
-    if cmd.no_color:
+    config = cmd_options()
+    if config.no_color:
         console = Console(record=True, color_system=None)
     else:
         console = Console(record=True, color_system="truecolor")
-    return console
+    return console, config

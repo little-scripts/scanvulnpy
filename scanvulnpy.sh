@@ -26,23 +26,24 @@ case "$1" in
     ;;
 --run)
     echo -e "\e[93m=> [1/5] Pip freeze requirements\e[0m"
-    pip freeze >./local-requirements.txt
+    pip freeze >./scanvulnpy-local-requirements.txt
     sleep 3 # give time
 
     echo -e "\e[93m=> [2/5] Build images\e[0m"
-    docker build --no-cache -t scanvulnpy .
+    docker build --no-cache -t scanvulnpy-packages .
 
     echo -e "\e[93m=> [3/5] Run images\e[0m"
-    docker run -it --rm -v .://home//little-scripts//scanvulnpy scanvulnpy:latest "python -m scanvulnpy -r ./local-requirements.txt"
+    docker run -it --rm -v .://home//little-scripts//scanvulnpy scanvulnpy-packages:latest "python -m scanvulnpy -r ./scanvulnpy-local-requirements.txt -v vulns"
 
-    echo -e "\e[93m=> [4/5] Remove image\e[0m"
-    image_scanvulnpy="scanvulnpy"
+    echo -e "\e[93m=> [4/5] Removing image\e[0m"
+    image_scanvulnpy="scanvulnpy-packages"
     for c in $(docker images | sed '1d' | awk '{print $1}' | grep -oE "$image_scanvulnpy"); do
       docker rmi -f "$c"
       echo -e "Delete Images $c"
     done
-    echo -e "\e[93m=> [5/5] Remove requirements\e[0m"
-    rm -f ./local-requirements.txt
+
+    echo -e "\e[93m=> [5/5] Removing requirements\e[0m"
+    rm -f ./scanvulnpy-local-requirements.txt
         ;;
     *)
         echo "Invalid option: $1"

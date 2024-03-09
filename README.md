@@ -1,6 +1,5 @@
 # scanvulnpy
 
-
 <div align="center">
   <a target="_blank" rel="noopener noreferrer" href="https://pypi.org/project/scanvulnpy" title="">
     <img  alt="pip package version" src="https://img.shields.io/pypi/v/scanvulnpy?color=informational">
@@ -23,7 +22,9 @@
   <br>
 </div>
 
+
 scanvulnpy is a Python package to scan vulnerability PyPI Packages, the data provided by https://osv.dev.
+
 
 ## Installation from sources
 ```sh
@@ -38,15 +39,15 @@ $ python -m scanvulnpy
 You can find here a complete list of options :
 
 ```
-usage: python -m scanvulnpy [-h] [-f FREEZE] [-r REQUIREMENTS] [--header HEADER] [-v VERBOSE] [-nc]
+usage: __main__.py [-h] [-f FREEZE] [-r REQUIREMENTS] [-v VERBOSE] [-nc]
 
-A simple wrapper to Scan vulnerability PyPI Packages, the data provided by https://osv.dev
+A simple wrapper to scan vulnerability PyPI Packages, the data provided by https://osv.dev
 
 options:
   -h, --help       show this help message and exit
-  -f FREEZE        enable by default, disable if -r is setting.
-  -r REQUIREMENTS  path requirements (e.g. -r <path>).
-  -v VERBOSE       verbose (e.g. -v False).
+  -f FREEZE        enable by default, disable if '-r <path>' is setting
+  -r REQUIREMENTS  path requirements (e.g. -r <path>)
+  -v VERBOSE       verbose details vulns(e.g. -v vulns)
   -nc              Disable colors.
 ```
 
@@ -63,8 +64,10 @@ $ ./scanvulnpy.sh --run
 ## License
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/little-scripts/scanvulnpy/blob/main/LICENSE)
 
+
 ## Contributing
-Pull requests are welcome. Feel free to open an issue if you want to add other features.
+[Contributions](./CONTRIBUTING.md) to this project are welcome. Feel free, if you want report an issue or add other features.
+
 
 ## References
 - https://pypi.org/project/scanvulnpy/

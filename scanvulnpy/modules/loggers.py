@@ -29,12 +29,11 @@ except ModuleNotFoundError as e:
     print("Install: python -m pip install --upgrade <module-named>")
     sys.exit(1)
 
-class Level:
+class Logger:
     """Controller class for Level."""
 
-    def __init__(self, verbose):
+    def __init__(self):
         """Init Class Level."""
-        self.verbose=verbose
 
     def info(self, message):
         """docstring
@@ -52,9 +51,8 @@ class Level:
         """docstring
         """
         current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S:%f')
-        if self.verbose is True:
-            current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S:%f')
-            console.print("{} | {}DEBUG{} | {}".format( current_date, "[bold yellow]", "[/bold yellow]", message), highlight=False, overflow="ignore", crop=False)
+        current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S:%f')
+        console.print("{} | {}DEBUG{} | {}".format( current_date, "[bold yellow]", "[/bold yellow]", message), highlight=False, overflow="ignore", crop=False)
 
     def warning(self, message):
         """docstring
