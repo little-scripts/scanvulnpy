@@ -22,7 +22,7 @@ description = "A simple scan vulnerability PyPI Packages, the data provided by h
 
 readme = "README.md"
 
-license = "Apache 2.0"
+license = {file = "LICENSE"}
 
 requires-python = ">=3.7"
 
