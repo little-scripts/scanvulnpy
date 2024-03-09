@@ -24,11 +24,10 @@ import sys
 import os
 
 try:
-    from .modules.loggers import Level
     from .modules.utils import Utils
     from .modules.scanner import Scanner
     from .modules.banners import print_banner
-    from .modules.cmd import cmd_options, get_options
+    from .modules.cmd import get_options
     from .__version__ import (
         __author__,
         __version__,
@@ -46,12 +45,10 @@ if not Utils.check_platform:
 
 if __name__ == '__main__':
     try:
-        config = cmd_options()
-        console = get_options()
+        console, config = get_options()
         print_banner(console, __author__, __version__)
         packages = Utils(config).get_requirements()
         Scanner(config).run(packages)
-
     except Exception as e:
         print("Exception:", e)
         sys.exit(1)

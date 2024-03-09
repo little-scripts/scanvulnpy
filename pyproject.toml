@@ -12,7 +12,7 @@ authors = [
 ]
 
 # Versions
-version = "0.1.0.b1"  # 0.1.0.dev1 | 0.1.0a1 | 0.1.0.b1 | 0.1.0rc | 0.1.0
+version = "0.1.0.b3"  # 0.1.0.dev1 | 0.1.0a1 | 0.1.0.b1 | 0.1.0rc | 0.1.0
 
 maintainers = [
   {name = "little-scripts", email = "jgdevrennes@gmail.com"}
@@ -22,9 +22,9 @@ description = "A simple scan vulnerability PyPI Packages, the data provided by h
 
 readme = "README.md"
 
-license = {file = "LICENSE"}
+license = "Apache 2.0"
 
-requires-python = ">=3.8"
+requires-python = ">=3.7"
 
 dependencies = [
   "requests>=2.31.0",

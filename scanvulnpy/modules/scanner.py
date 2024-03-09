@@ -29,7 +29,7 @@ except ModuleNotFoundError as e:
     print("Install: python -m pip install --upgrade <module-named>")
     sys.exit(1)
 
-from .loggers import Level
+from .loggers import Logger
 
 class Scanner:
     """Controller class for Scanner."""
@@ -58,11 +58,11 @@ class Scanner:
         elif re.match('.*>=.*', package):
             payload = None
             version = None
-            Level.error(self, f"{package} ! Retry with a specific version(e.g., request==2.31.0) in your requirements.") # type: ignore
+            Logger.error(self, f"{package} ! Retry with a specific version(e.g., request==2.31.0) in your requirements.") # type: ignore
         elif re.match('.*<=.*', package):
             payload = None
             version = None
-            Level.error(self, f"{package} ! Retry with a specific version(e.g., request==2.31.0) in your requirements.") # type: ignore
+            Logger.error(self, f"{package} ! Retry with a specific version(e.g., request==2.31.0) in your requirements.") # type: ignore
         else:
             # If no version is specified
             package = package.strip().split()
@@ -96,42 +96,35 @@ class Scanner:
             list_packages_vuln.append(package)
             # Log vulnerability details
             if version:
-                Level.warning(self, payload) # type: ignore
+                if self.config.verbose == 'vulns':
+                    Logger.warning(self, response.text) # type: ignore
+                else:
+                    Logger.warning(self, payload) # type: ignore
             else:
-                Level.warning(self, f"{payload}...We can't determinate if your version is affected. Retry with a specific version(e.g., request==2.31.0) in your requirements.") # type: ignore
+                Logger.warning(self, f"{payload}...We can't determinate if your version is affected. Retry with a specific version(e.g., request==2.31.0) in your requirements.") # type: ignore
         # If no vulnerabilities found and response is successful
         elif response.text == '{}' and response.status_code == 200:
             count_ok += 1
             list_packages_ok.append(package)
-            Level.info(self, f'Scan: {payload}') # type: ignore
+            Logger.info(self, f'Scan: {payload}') # type: ignore
 
         return count_ok, count_vuln, list_packages_vuln, list_packages_ok
 
-    def log_final(self, count_vuln, count_ok, list_packages_vuln, list_packages_ok):
+    @staticmethod
+    def request_package(payload):
         """
-        Logs the final results of the vulnerability Scan.
+        Request API endpoint for the given packages.
 
         Args:
-            count_vuln (int): Number of vulnerable packages.
-            count_ok (int): Number of non-vulnerable packages.
-            list_packages_vuln (list): List of vulnerable packages.
-            list_packages_ok (list): List of non-vulnerable packages.
-        """
-        # Calculate total packages and total vulnerabilities
-        total_packages = count_ok + count_vuln
-        total_vulns = total_packages - count_ok
+            tuple: A tuple containing the payload and the package version.
 
-        # Log the final results based on the number of vulnerabilities found
-        if count_vuln == 0:
-            # Log if no vulnerabilities found
-            Level.info(self, f"{total_packages} Package(s) scanned") # type: ignore
-            Level.info(self, f"{total_vulns} Package(s) vulnerable") # type: ignore
-            Level.info(self, f"Package(s) non-vulnerable: {list_packages_ok}") # type: ignore
-        else:
-            # Log if vulnerabilities found
-            Level.info(self, f"{total_packages} Package(s) scanned") # type: ignore
-            Level.info(self, f"{count_ok} Package(s) non-vulnerable: {list_packages_ok}") # type: ignore
-            Level.warning(self, f"{total_vulns} Package(s) vulnerable: {list_packages_vuln}") # type: ignore
+        Returns:
+            json: A json response containing vulnerable and non-vulnerable packages.
+        """
+        # API endpoint for vulnerability Scanning
+        url = 'https://api.osv.dev/v1/query'
+        response = requests.post(url, json=payload, headers={'content-type': 'application/json'}, timeout=10)
+        return response
 
     def run(self, packages):
         """
@@ -144,9 +137,6 @@ class Scanner:
             tuple: A tuple containing counts of vulnerable and non-vulnerable packages,
             and lists of vulnerable and non-vulnerable packages.
         """
-        # API endpoint for vulnerability Scanning
-        url = 'https://api.osv.dev/v1/query'
-
         # Initialize counters and lists to store results
         count_ok = 0
         count_vuln = 0
@@ -154,8 +144,8 @@ class Scanner:
         list_packages_vuln = []
 
         # Log start of the Scan
-        Level.info(self, "Start Scan vulnerability PyPI packages. The data provided by https://osv.dev") # type: ignore
-        Level.info(self, "In progress, this may take few seconds...") # type: ignore
+        Logger.info(self, "Start Scan vulnerability PyPI packages. The data provided by https://osv.dev") # type: ignore
+        Logger.info(self, "In progress, this may take few seconds...") # type: ignore
 
         # Iterate over packages and Scan each one
         for package in packages:
@@ -166,9 +156,24 @@ class Scanner:
                 payload, version = Scanner(self.config).set_payload(package)
                 # If payload send POST request to the API endpoint
                 if payload:
-                    response = requests.post(url, json=payload, headers={'content-type': 'application/json'}, timeout=10)
+                    response = Scanner(self.config).request_package(payload)
                     # Log the Scan results and update counters and lists
                     count_ok, count_vuln, list_packages_vuln, list_packages_ok = Scanner(self.config).log_result(response, payload, package, version, count_vuln, count_ok, list_packages_vuln, list_packages_ok)
 
-        # Logs the final results of the vulnerability Scan
-        Scanner(self.config).log_final(count_vuln, count_ok, list_packages_vuln, list_packages_ok)
+        # Calculate total packages and total vulnerabilities
+        total_packages = count_ok + count_vuln
+        total_vulns = total_packages - count_ok
+        # Log the final results based on the number of vulnerabilities found
+        Logger.info(self, "----------------- Results ----------------------") # type: ignore
+        if count_vuln == 0:
+            # Log if no vulnerabilities found
+            Logger.info(self, f"{total_packages} Package(s) scanned") # type: ignore
+            Logger.info(self, f"{total_vulns} Package(s) vulnerable") # type: ignore
+            Logger.info(self, f"Package(s) non-vulnerable: {list_packages_ok}") # type: ignore
+        else:
+            # Log if vulnerabilities found
+            Logger.info(self, f"{total_packages} Package(s) scanned") # type: ignore
+            Logger.info(self, f"{count_ok} Package(s) non-vulnerable: {list_packages_ok}") # type: ignore
+            Logger.warning(self, f"{total_vulns} Package(s) vulnerable: {list_packages_vuln}") # type: ignore
+
+        return list_packages_vuln
