@@ -8,8 +8,8 @@ FROM python:3.11-slim-bookworm as slim-bookworm
 # ARGs need to be placed after the FROM instruction. As per https://docs.docker.com/engine/reference/builder/#arg.
 # VERSION: 0.1.0.dev1 | 0.1.0a1 | 0.1.0.b1 | 0.1.0rc | 0.1.0
 ARG TAG="local"
-ARG VERSION="0.1.0.b3"
-ARG BUILD_DATE="2024-03-09"
+ARG VERSION="0.1.0rc"
+ARG BUILD_DATE="2024-03-11"
 ARG MAINTAINER="little-scripts <jgdevrennes@gmail.com>"
 
 #===========
@@ -47,6 +47,3 @@ RUN pip install -r requirements.txt
 #===========
 ENTRYPOINT [ "/bin/sh", "-c" ]
 CMD ["python -m scanvulnpy -r ./requirements.txt"]
-
-# ENTRYPOINT [ "python", "-m", "scanvulnpy"]
-# CMD ["-r ./requirements.txt --verbose vulns"]
