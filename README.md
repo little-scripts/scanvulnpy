@@ -39,16 +39,16 @@ $ python -m scanvulnpy
 You can find here a complete list of options :
 
 ```
-usage: __main__.py [-h] [-f FREEZE] [-r REQUIREMENTS] [-v VERBOSE] [-nc]
+usage: __main__.py [-h] [-f FREEZE] [-r REQUIREMENTS] [--verbose VERBOSE] [-nc NO_COLOR]
 
-A simple wrapper to scan vulnerability PyPI Packages, the data provided by https://osv.dev
+A simple Python package to scan vulnerability PyPI Packages, the data provided by https://osv.dev
 
 options:
-  -h, --help       show this help message and exit
-  -f FREEZE        enable by default, disable if '-r <path>' is setting
-  -r REQUIREMENTS  path requirements (e.g. -r <path>)
-  -v VERBOSE       verbose details vulns(e.g. -v vulns)
-  -nc              Disable colors.
+  -h, --help         show this help message and exit
+  -f FREEZE          enable by default, disable if '-r <path>' is setting
+  -r REQUIREMENTS    path requirements (e.g. -r <path>)
+  --verbose VERBOSE  verbose details vulns(e.g. --verbose vulns)
+  -nc NO_COLOR       Disable colors.
 ```
 
 ## Docker setup

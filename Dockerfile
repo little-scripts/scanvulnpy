@@ -31,10 +31,14 @@ RUN apt-get update && \
     apt-get clean
 
 #===========
-# WORKDIR/COPY/INSTALL
+# WORKDIR
 #===========
 WORKDIR /home/little-scripts/scanvulnpy
 COPY . /home/little-scripts/scanvulnpy
+
+#===========
+# INSTALL
+#===========
 RUN python -m pip install --upgrade pip
 RUN pip install -r requirements.txt
 
@@ -43,3 +47,6 @@ RUN pip install -r requirements.txt
 #===========
 ENTRYPOINT [ "/bin/sh", "-c" ]
 CMD ["python -m scanvulnpy -r ./requirements.txt"]
+
+# ENTRYPOINT [ "python", "-m", "scanvulnpy"]
+# CMD ["-r ./requirements.txt --verbose vulns"]

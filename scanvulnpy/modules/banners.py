@@ -22,9 +22,11 @@ Module banner
 """
 
 import sys
+from platform import system
+from os import get_terminal_size
+
 try:
-    from platform import system
-    from os import get_terminal_size
+    from rich.console import Console
     from rich.align import Align
     from rich.panel import Panel
     from rich.text import Text
@@ -47,32 +49,37 @@ def get_terminal_width() -> int:
 
     return width
 
-def print_banner(console, author, version) -> None:
+def print_banner(author, version) -> None:
     """docstring
     """
+
+    console = Console(record=True, color_system="truecolor")
+
     width = get_terminal_width()
     height = 7
     large = """\
 
-    A simple wrapper to scan vulnerability PyPI Packages,
+    A simple Python package to scan vulnerability PyPI Packages,
     the data provided by https://osv.dev
 
 """
 
-    banner = """\
+    small = """\
 
-    A simple wrapper to scan vulnerability PyPI Packages,
+    A simple Python package to scan vulnerability PyPI Packages,
     the data provided by https://osv.dev
 
 """
 
     if width < 90:
-        banner = banner
+        thebanner = small
         height = 7
+    else:
+        thebanner = large
 
     panel = Panel(
         Align(
-            Text(banner, justify="center", style="blue"),
+            Text(thebanner, justify="center", style="blue"),
             vertical="middle",
             align="center",
         ),
