@@ -20,8 +20,9 @@ Module logger
 """
 
 import sys
+from datetime import datetime
+
 try:
-    from datetime import datetime
     from rich.console import Console
     console = Console()
 except ModuleNotFoundError as e:
@@ -50,7 +51,6 @@ class Logger:
     def debug(self, message):
         """docstring
         """
-        current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S:%f')
         current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S:%f')
         console.print("{} | {}DEBUG{} | {}".format( current_date, "[bold yellow]", "[/bold yellow]", message), highlight=False, overflow="ignore", crop=False)
 

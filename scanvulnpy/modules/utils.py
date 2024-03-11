@@ -19,15 +19,19 @@
 Module Utils
 """
 
+import sys
 import os
-
+from .loggers import Logger
+logger = Logger()
 
 class Utils:
     """Controller class for Utils."""
 
-    def __init__(self, config) -> None:
-        self.config=config
+    def __init__(self) -> None:
         self.platform_os = os.name
+
+    def __repr__(self):
+        return f"__repr__ Utils: [platform_os={self.platform_os}]"
 
     @staticmethod
     def is_platform_windows():
@@ -81,24 +85,41 @@ class Utils:
         else:
             return False
 
-    def get_requirements(self):
+    def get_requirements(self, path:str = None, freeze:bool = False):
         """
         Retrieves the list of packages from the requirements file.
+
+        Args:
+            path (str): Path to requirements file.
+            freeze (bool): pip freeze local requirements.
 
         Returns:
             list: List of package names and versions.
         """
         # Get the path to the requirements file from the configuration
-        path_requirements = self.config.requirements
+        path_requirements = path
+
         # If no requirements file specified and freezing packages is enabled
-        if not path_requirements and self.config.freeze:
+        if not path_requirements and freeze:
+
+            logger.info("Pip freeze local PyPI packages")
             # Use 'pip freeze' command to generate requirements list with installed packages
             cmd = 'pip freeze'
             output = os.popen(cmd).read()
             packages = output.split('\n')
-        else:
+
+        elif path_requirements and not freeze:
+
+            logger.info(f"Get PyPI packages from requirements: {path_requirements}")
             # Read the requirements file and return the list of packages
-            with open(path_requirements, "r", encoding="utf-8") as file:
-                packages = file.readlines()
+            try:
+                with open(path_requirements, "r", encoding="utf-8") as file:
+                    packages = file.readlines()
+            except Exception as e:
+                logger.error(f"{e} ! Please check the path you send !")
+                sys.exit(1)
+
+        else:
+            packages = None
 
         return packages

@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 0.1.0rc (2024-03-11)
+
 ## 0.1.0.b3 (2024-03-09)
 ### Improvement
 - Add "-v vulns" for details vulnerability

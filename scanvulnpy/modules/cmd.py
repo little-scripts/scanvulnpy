@@ -20,18 +20,16 @@ Module cmd
 
 """
 
-import sys
-try:
-    import argparse
-    from rich.console import Console
-except ModuleNotFoundError as e:
-    print("Mandatory dependencies are missing:", e)
-    print("Install: python -m pip install --upgrade <module-named>")
-    sys.exit(1)
+import argparse
 
 def cmd_options():
-    """ Get options
     """
+    Returns the options send by user in command-line.
+
+    Returns:
+        Options: freeze, requirements, verbose, no_color.
+    """
+
     description = "A simple wrapper to scan vulnerability PyPI Packages, the data provided by https://osv.dev"
 
     parser = argparse.ArgumentParser(
@@ -50,38 +48,22 @@ def cmd_options():
     parser.add_argument(
         "-r",
         dest="requirements",
-        action="store",
         default=False,
         required=False,
-        help="path requirements (e.g. -r <path>)",
+        help="path requirements(e.g. -r <path>)",
     )
 
     parser.add_argument(
-        "-v",
+        "--verbose",
         dest="verbose",
         default=False,
         required=False,
-        help="verbose details vulns(e.g. -v vulns)",
-    )
-
-    parser.add_argument(
-        "-nc",
-        dest="no_color",
-        default=False,
-        required=False,
-        action="store_true",
-        help="Disable colors.",
+        help="verbose details vulns(e.g. --verbose vulns)",
     )
 
     options = parser.parse_args()
-    return options
 
-def get_options():
-    """ Get options
-    """
-    config = cmd_options()
-    if config.no_color:
-        console = Console(record=True, color_system=None)
-    else:
-        console = Console(record=True, color_system="truecolor")
-    return console, config
+    if options.requirements is not False:
+        options.freeze = False
+
+    return options
