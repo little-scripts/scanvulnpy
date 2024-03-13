@@ -58,7 +58,7 @@ Build and Run the Docker image:
 
 ```sh
 $ git clone https://github.com/little-scripts/scanvulnpy.git
-$ ./scanvulnpy.sh --run
+$ ./scanvulnpy.sh --vulns
 ```
 
 ## License
