@@ -1,18 +1,20 @@
-#!/bin/sh
-# set -e
+#!/bin/bash
+set -e
 
 version="$(cat < ./scanvulnpy/__version__.py | grep -E "__version__ =" | awk '{print $3}' )"
 
 # shellcheck disable=SC2039
-echo -e "scanvulnpy $version | by little-scripts"
+echo -e "\n------------------------------------------------------------------------------"
+echo -e " 🌍 \e[93mscanvulnpy $version | By little-scripts developers | ❤️  Open Source\e[0m        "
+echo -e "--------------------------------------------------------------------------------"
 
 # shellcheck disable=SC2039
 show_help() {
     echo -e "\e[90m\nA simple scan vulnerability PyPI Packages, the data provided by https://osv.dev"
-    echo -e "\nUsage: $0 (<Options>)"
+    echo -e "\nUsage: $0 <Options>"
     echo -e "\nOptions:"
     echo -e "  -h --help    Show this help"
-    echo -e "  --run        Run scanner\e[37m"
+    echo -e "  --vulns      Run scan vulnerability PyPI Packages\e[37m"
     exit 1
 }
 
@@ -24,16 +26,19 @@ case "$1" in
 --help)
     show_help
     ;;
---run)
-    echo -e "\e[93m=> [1/5] Pip freeze requirements\e[0m"
+--vulns)
+    echo -e "\e[34m=> [1/5] Pip freeze requirements\e[0m"
     python -m pip freeze > ./scanvulnpy-local-requirements.txt
     sleep 3 # give time
 
-    echo -e "\e[93m=> [2/5] Build images\e[0m"
+    echo -e "\e[34m=> [2/5] Build images\e[0m"
     docker build --no-cache -t scanvulnpy-packages .
 
-    echo -e "\e[93m=> [3/5] Run images\e[0m"
-    docker run -it --rm -v .://home//little-scripts//scanvulnpy scanvulnpy-packages:latest  "python -m scanvulnpy -r ./scanvulnpy-local-requirements.txt --verbose vulns"
+    echo -e "\e[34m=> [5/5] Removing requirements\e[0m"
+    rm -f ./scanvulnpy-local-requirements.txt
+
+    echo -e "\e[34m=> [3/5] Run images\e[0m"
+    docker run -it --rm scanvulnpy-packages:latest
 
     echo -e "\e[93m=> [4/5] Removing image\e[0m"
     image_scanvulnpy="scanvulnpy-packages"
@@ -41,9 +46,6 @@ case "$1" in
       docker rmi -f "$c"
       echo -e "Delete Images $c"
     done
-
-    echo -e "\e[93m=> [5/5] Removing requirements\e[0m"
-    rm -f ./scanvulnpy-local-requirements.txt
         ;;
     *)
         echo "Invalid option: $1"

@@ -45,5 +45,4 @@ RUN pip install -r requirements.txt
 #===========
 # ENTRYPOINT
 #===========
-ENTRYPOINT [ "/bin/sh", "-c" ]
-CMD ["python -m scanvulnpy -r ./requirements.txt"]
+ENTRYPOINT ["./entrypoint.sh"]
