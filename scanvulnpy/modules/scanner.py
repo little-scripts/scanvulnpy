@@ -100,11 +100,12 @@ class Scanner:
         return response
 
     @staticmethod
-    def log_result_request(verbose, response, payload, package, version, count_vulnerability, count_non_vulnerable, list_packages_vulnerable, list_packages_non_vulnerable):
+    def log_result_request(nb_packs, verbose, response, payload, package, version, count_vulnerability, count_non_vulnerable, list_packages_vulnerable, list_packages_non_vulnerable):
         """
         Logs the result of Scanning a single package.
 
         Args:
+            nb_packs (int): Number of packages.
             verbose (str): verbose vulnerability.
             response (Response): HTTP response object from the vulnerability Scan.
             package (str): Name of the package being Scanned.
@@ -125,18 +126,20 @@ class Scanner:
             # Log vulnerability details
             if version:
                 if verbose == 'vulns':
-                    logger.warning(response.text)
+                    logger.warning(f'Scan {nb_packs}: {response.text}')
                 else:
-                    logger.warning(payload)
+                    logger.warning(f'Scan {nb_packs}: {payload}')
             else:
-                logger.warning(f"{payload}...We can't determinate if your version is affected. Retry with a specific version(e.g., request==2.31.0) in your requirements.")
+                logger.warning(f"Scan {nb_packs}: {payload}...We can't determinate if your version is affected. Retry with a specific version(e.g., request==2.31.0) in your requirements.")
         # If no vulnerabilities found and response is successful
         elif response.text == '{}' and response.status_code == 200:
             count_non_vulnerable += 1
             list_packages_non_vulnerable.append(package.strip())
-            logger.info(f'Scan: {payload}')
+            logger.info(f'Scan {nb_packs}: {payload}')
 
-        return count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable
+        nb_packs -= 1
+
+        return nb_packs, count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable
 
     @staticmethod
     def final_results(count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable):
@@ -172,7 +175,7 @@ class Scanner:
 
         return count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable
 
-    def run(self, packages:list = None, verbose:str = None) -> None :
+    def run(self, packages:list = None, nb_packages:int = None, verbose:str = None) -> None :
         """
         Runs the vulnerability Scan for the given packages.
 
@@ -184,13 +187,14 @@ class Scanner:
             list: List of vulnerable packages.
         """
         # Log start of the Scan
-        logger.info("Scan vulnerability PyPI packages, this may take few seconds...")
+        logger.info(f"Scan vulnerability on {nb_packages} PyPI packages, this may take few seconds...")
 
         # Initialize counters and lists to store results
         count_non_vulnerable = 0
         count_vulnerability = 0
         list_packages_non_vulnerable = []
         list_packages_vulnerable = []
+        nb_packs = nb_packages
 
         # Iterate over packages and Scan each one
         for package in packages:
@@ -200,7 +204,7 @@ class Scanner:
             if payload:
                 response = Scanner().request_api_osv_dev(payload)
                 # Log the Scan results and update counters and lists
-                count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable = Scanner().log_result_request(verbose, response, payload, package, version, count_vulnerability, count_non_vulnerable, list_packages_vulnerable, list_packages_non_vulnerable)
+                nb_packs, count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable = Scanner().log_result_request(nb_packs, verbose, response, payload, package, version, count_vulnerability, count_non_vulnerable, list_packages_vulnerable, list_packages_non_vulnerable)
         # Log the final results based on the number of vulnerabilities found
         count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable = Scanner().final_results(count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable)
 

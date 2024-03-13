@@ -39,10 +39,16 @@ if not Utils.check_platform:
 
 if __name__ == '__main__':
     try:
+        # ------------ setup ------------
         options = cmd_options()
+        utils = Utils()
+        scan = Scanner()
+
+        # ------------ start scan ------------
         print_banner(__author__, __version__)
-        packages = Utils().get_requirements(options.requirements, options.freeze)
-        Scanner().run(packages, options.verbose)
+        packages, nb_packages = utils.get_requirements(options.requirements, options.freeze)
+        scan.run(packages, nb_packages, options.verbose)
+
     except Exception as e:
         print("Exception:", e)
         sys.exit(1)
