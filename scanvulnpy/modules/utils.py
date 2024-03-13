@@ -122,4 +122,6 @@ class Utils:
         else:
             packages = None
 
-        return packages
+        nb_packages = len(packages)
+
+        return packages, nb_packages
