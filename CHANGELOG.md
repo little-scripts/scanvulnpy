@@ -1,5 +1,12 @@
 # ChangeLog
 
+## 0.1.0rc1 (2024-03-13)
+### Improvement
+- Add counter packages
+
+### Change
+- ENTRYPOINT Dockerfile
+
 ## 0.1.0rc (2024-03-11)
 
 ## 0.1.0.b3 (2024-03-09)
