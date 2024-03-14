@@ -162,3 +162,4 @@ cython_debug/
 # scanvulnpy project
 __pycache__
 .git
+coverage_html

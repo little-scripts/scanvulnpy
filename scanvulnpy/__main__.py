@@ -23,7 +23,7 @@ A simple scan vulnerability PyPI Packages, the data provided by https://osv.dev
 import sys
 import os
 from .modules.utils import Utils
-from .modules.scanner import Scanner
+from .modules.scanner import VulnerabilityScanner
 from .modules.banners import print_banner
 from .modules.cmd import cmd_options
 from .__version__ import (
@@ -39,15 +39,15 @@ if not Utils.check_platform:
 
 if __name__ == '__main__':
     try:
-        # ------------ setup ------------
+        # ------------ setup (Instantiate Object) ------------
         options = cmd_options()
         utils = Utils()
-        scan = Scanner()
+        scanvuln = VulnerabilityScanner()
 
         # ------------ start scan ------------
         print_banner(__author__, __version__)
         packages, nb_packages = utils.get_requirements(options.requirements, options.freeze)
-        scan.run(packages, nb_packages, options.verbose)
+        scanvuln.run(packages, nb_packages, options.verbose)
 
     except Exception as e:
         print("Exception:", e)

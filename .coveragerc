@@ -1,10 +1,13 @@
 [coverage:run]
+source = .
 branch = True
 omit =
     # omit anything in a "tests" directory anywhere
+    *__init__.py
+    */test/*
 
 [coverage:report]
-show_missing = False
+show_missing = True
 skip_covered = False
 
 [tool.coverage.run]
