@@ -4,7 +4,7 @@
 
 Unit tests:
 ```python
-coverage run -m pytest --cov=scanvulnpy -v -m smoke --cov-report term-missing
+coverage run -m pytest -v -m smoke --cov-report term-missing
 ```
 
 Code coverage:
