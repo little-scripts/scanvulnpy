@@ -17,7 +17,7 @@
 
 
 """
-Module Scanner
+Module VulnerabilityScanner
 """
 
 import sys
@@ -31,19 +31,18 @@ except ModuleNotFoundError as e:
     sys.exit(1)
 
 from .loggers import Logger
-logger = Logger()
 
-class Scanner:
-    """Controller class for Scanner."""
+
+class VulnerabilityScanner:
+    """Controller class for VulnerabilityScanner."""
 
     def __init__(self):
-        pass
+        self.logger = Logger()
 
     def __repr__(self):
-        return "__repr__ Scanner: None"
+        return "__repr__ Scanner: [logger={self.logger}]"
 
-    @staticmethod
-    def set_payload(package:str = None) -> None :
+    def set_payload(self, package: str = None) -> tuple:
         """
         Sets the payload for a given package.
 
@@ -54,36 +53,27 @@ class Scanner:
             tuple: A tuple containing the payload and the package version.
         """
         package = package.strip()
-        # Check if the package name contains alphanumeric characters
+
         if re.match('.*[a-z0-9].*', package):
-            # If version is specified
-            if re.match('.*==.*', package):
-                # Retrieves the package name and version
-                package = package.strip().split('==')
-                package_name = package[0]
-                version = package[1]
-                # Creates the payload with the package name, version, and ecosystem (PyPI)
-                payload = {"version": f"{version}", "package": {"name": f"{package_name}", "ecosystem": "PyPI"}}
-            elif re.match('.*>=.*', package):
+            if '==' in package:
+                package_name, version = package.split('==')
+                payload = {"version": version, "package": {"name": package_name, "ecosystem": "PyPI"}}
+            elif '>=' in package or '<=' in package:
                 payload = None
                 version = None
-                logger.error(f"{package} ! Retry with a specific version(e.g., request==2.31.0) in your requirements.")
-            elif re.match('.*<=.*', package):
-                payload = None
-                version = None
-                logger.error(f"{package} ! Retry with a specific version(e.g., request==2.31.0) in your requirements.")
+                self.logger.error(f"{package} ! Retry with a specific version (e.g., request==2.31.0) in your requirements.")
             else:
-                # If no version is specified
-                package = package.strip().split()
-                package = package[0]
+                package_name = package.split()[0]
                 version = None
-                # Creates the payload with the package name, and ecosystem (PyPI)
-                payload = {"package": {"name": f"{package}", "ecosystem": "PyPI"}}
+                payload = {"package": {"name": package_name, "ecosystem": "PyPI"}}
+        else:
+            payload = None
+            version = None
+            self.logger.error(f"Invalid package format: {package}. Retry with a valid package name.")
 
         return payload, version
 
-    @staticmethod
-    def request_api_osv_dev(payload:tuple = None) -> None :
+    def request_api_osv_dev(self, payload:tuple = None) -> None :
         """
         Request API endpoint for the given packages.
 
@@ -99,8 +89,7 @@ class Scanner:
         response = requests.post(url, json=payload, headers=header, timeout=10)
         return response
 
-    @staticmethod
-    def log_result_request(nb_packs, verbose, response, payload, package, version, count_vulnerability, count_non_vulnerable, list_packages_vulnerable, list_packages_non_vulnerable):
+    def log_result_request(self, nb_packs: int, verbose: str, response: str, payload: dict, package: str, version: str, count_vulnerability: int, count_non_vulnerable: int, list_packages_vulnerable: list, list_packages_non_vulnerable: list) -> tuple:
         """
         Logs the result of Scanning a single package.
 
@@ -126,23 +115,22 @@ class Scanner:
             # Log vulnerability details
             if version:
                 if verbose == 'vulns':
-                    logger.warning(f'Scan {nb_packs}: {response.text}')
+                    self.logger.warning(f'Scan {nb_packs}: {response.text}')
                 else:
-                    logger.warning(f'Scan {nb_packs}: {payload}')
+                    self.logger.warning(f'Scan {nb_packs}: {payload}')
             else:
-                logger.warning(f"Scan {nb_packs}: {payload}...We can't determinate if your version is affected. Retry with a specific version(e.g., request==2.31.0) in your requirements.")
+                self.logger.warning(f"Scan {nb_packs}: {payload}...We can't determinate if your version is affected. Retry with a specific version(e.g., request==2.31.0) in your requirements.")
         # If no vulnerabilities found and response is successful
         elif response.text == '{}' and response.status_code == 200:
             count_non_vulnerable += 1
             list_packages_non_vulnerable.append(package.strip())
-            logger.info(f'Scan {nb_packs}: {payload}')
+            self.logger.info(f'Scan {nb_packs}: {payload}')
 
         nb_packs -= 1
 
         return nb_packs, count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable
 
-    @staticmethod
-    def final_results(count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable):
+    def final_results(self, count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable):
         """
         Logs the result of Scanning a single package.
 
@@ -161,17 +149,17 @@ class Scanner:
         total_packages = count_non_vulnerable + count_vulnerability
         total_vulnerabilities = total_packages - count_non_vulnerable
 
-        logger.info("----------------- Results ----------------------")
+        self.logger.info("----------------- Results ----------------------")
         if count_vulnerability == 0:
             # Log if no vulnerabilities found
-            logger.info(f"{total_packages} Package(s) scanned")
-            logger.info(f"{total_vulnerabilities} Package(s) vulnerable")
-            logger.info(f"Package(s) non-vulnerable: {list_packages_non_vulnerable}")
+            self.logger.info(f"{total_packages} Package(s) scanned")
+            self.logger.info(f"{total_vulnerabilities} Package(s) vulnerable")
+            self.logger.info(f"Package(s) non-vulnerable: {list_packages_non_vulnerable}")
         else:
             # Log if vulnerabilities found
-            logger.info(f"{total_packages} Package(s) scanned")
-            logger.info(f"{count_non_vulnerable} Package(s) non-vulnerable: {list_packages_non_vulnerable}")
-            logger.warning(f"{total_vulnerabilities} Package(s) vulnerable: {list_packages_vulnerable}")
+            self.logger.info(f"{total_packages} Package(s) scanned")
+            self.logger.info(f"{count_non_vulnerable} Package(s) non-vulnerable: {list_packages_non_vulnerable}")
+            self.logger.warning(f"{total_vulnerabilities} Package(s) vulnerable: {list_packages_vulnerable}")
 
         return count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable
 
@@ -187,7 +175,7 @@ class Scanner:
             list: List of vulnerable packages.
         """
         # Log start of the Scan
-        logger.info(f"Scan vulnerability on {nb_packages} PyPI packages, this may take few seconds...")
+        self.logger.info(f"Scan vulnerability on {nb_packages} PyPI packages, this may take few seconds...")
 
         # Initialize counters and lists to store results
         count_non_vulnerable = 0
@@ -196,16 +184,20 @@ class Scanner:
         list_packages_vulnerable = []
         nb_packs = nb_packages
 
+        # Instantiate Object Scanner
+        scanvuln = VulnerabilityScanner()
+
         # Iterate over packages and Scan each one
         for package in packages:
             # Set payload for the package
-            payload, version = Scanner().set_payload(package)
+            payload, version = scanvuln.set_payload(package)
             # If payload send POST request to the API endpoint
             if payload:
-                response = Scanner().request_api_osv_dev(payload)
+                response = scanvuln.request_api_osv_dev(payload)
                 # Log the Scan results and update counters and lists
-                nb_packs, count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable = Scanner().log_result_request(nb_packs, verbose, response, payload, package, version, count_vulnerability, count_non_vulnerable, list_packages_vulnerable, list_packages_non_vulnerable)
+                nb_packs, count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable = scanvuln.log_result_request(nb_packs, verbose, response, payload, package, version, count_vulnerability, count_non_vulnerable, list_packages_vulnerable, list_packages_non_vulnerable)
+
         # Log the final results based on the number of vulnerabilities found
-        count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable = Scanner().final_results(count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable)
+        count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable = scanvuln.final_results(count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable)
 
         return count_non_vulnerable, count_vulnerability, list_packages_non_vulnerable, list_packages_vulnerable

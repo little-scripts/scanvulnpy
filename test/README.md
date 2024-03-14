@@ -1,10 +1,10 @@
 # Pytest
 
-* Launch inside folder tests :
+* Launch inside folder scanvulnpy :
 
 Unit tests:
 ```python
-coverage run -m pytest -v --strict-markers
+coverage run -m pytest -v -m smoke --cov-report term-missing
 ```
 
 Code coverage:
