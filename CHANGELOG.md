@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 0.1.0rc2 (2024-03-14)
+
 ## 0.1.0rc1 (2024-03-13)
 ### Improvement
 - Add counter packages
