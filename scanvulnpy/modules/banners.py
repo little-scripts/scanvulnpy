@@ -59,14 +59,14 @@ def print_banner(author, version) -> None:
     height = 7
     large = """\
 
-    A simple Python package to scan vulnerability PyPI Packages,
+    Scanner vulnerability PyPI Packages,
     the data provided by https://osv.dev
 
 """
 
     small = """\
 
-    A simple Python package to scan vulnerability PyPI Packages,
+    Scanner vulnerability PyPI Packages,
     the data provided by https://osv.dev
 
 """

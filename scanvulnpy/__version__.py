@@ -15,11 +15,11 @@
 # limitations under the License.
 #
 
-""" scanvulnpy - A simple wrapper to scan vulnerability PyPI Packages"""
+""" scanvulnpy - A simple Package Python to scan vulnerability PyPI Packages"""
 
 __title__ = "scanvulnpy"
 __description__ = "A simple scan vulnerability PyPI Packages, the data provided by https://osv.dev"
-__version__ = "0.1.0rc2"  # 0.1.0.dev1 | 0.1.0a1 | 0.1.0.b1 | 0.1.0rc | 0.1.0
+__version__ = "0.1.0rc3"  # 0.1.0.dev1 | 0.1.0a1 | 0.1.0.b1 | 0.1.0rc | 0.1.0
 __author__ = "little-scripts developers"
 __license__ = "Apache 2.0"
 __copyright__ = "Copyright little-scripts"

@@ -19,36 +19,35 @@
   <br>
   <img alt="Latest release" src="https://img.shields.io/github/last-commit/little-scripts/scanvulnpy/main?label=latest%20release">
   <img alt="Latest dev" src="https://img.shields.io/github/last-commit/little-scripts/scanvulnpy/dev?label=latest%20dev">
-  <br>
+  <br><br>
 </div>
 
 
-scanvulnpy is a Python package to scan vulnerability PyPI Packages, the data provided by https://osv.dev.
+Package Python to scan vulnerability PyPI Packages, the data provided by https://osv.dev.
 
 
 ## Installation from sources
-```sh
-$ pip install scanvulnpy
+```python
+pip install scanvulnpy
 ```
 
 ### Usage
-```sh
-$ python -m scanvulnpy
+```python
+python -m scanvulnpy
 ```
 
 You can find here a complete list of options :
 
-```
-usage: __main__.py [-h] [-f FREEZE] [-r REQUIREMENTS] [--verbose VERBOSE] [-nc NO_COLOR]
+```python
+usage: python -m scanvulnpy [-h] [-f FREEZE] [-r REQUIREMENTS] [--verbose VERBOSE] [-nc NO_COLOR]
 
-A simple Python package to scan vulnerability PyPI Packages, the data provided by https://osv.dev
+A simple Package Python to scan vulnerability PyPI Packages, the data provided by https://osv.dev
 
 options:
   -h, --help         show this help message and exit
   -f FREEZE          enable by default, disable if '-r <path>' is setting
   -r REQUIREMENTS    path requirements (e.g. -r <path>)
   --verbose VERBOSE  verbose details vulns(e.g. --verbose vulns)
-  -nc NO_COLOR       Disable colors.
 ```
 
 ## Docker setup
@@ -56,19 +55,14 @@ options:
 ### Usage
 Build and Run the Docker image:
 
-```sh
+```python
 $ git clone https://github.com/little-scripts/scanvulnpy.git
 $ ./scanvulnpy.sh --vulns
 ```
-
-## License
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/little-scripts/scanvulnpy/blob/main/LICENSE)
-
 
 ## Contributing
 [Contributions](./CONTRIBUTING.md) to this project are welcome. Feel free, if you want report an issue or add other features.
 
 
 ## References
-- https://pypi.org/project/scanvulnpy/
 - https://osv.dev

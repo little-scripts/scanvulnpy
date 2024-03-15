@@ -8,8 +8,7 @@ FROM python:3.11-slim-bookworm as slim-bookworm
 # ARGs need to be placed after the FROM instruction. As per https://docs.docker.com/engine/reference/builder/#arg.
 # VERSION: 0.1.0.dev1 | 0.1.0a1 | 0.1.0.b1 | 0.1.0rc | 0.1.0
 ARG TAG="local"
-ARG VERSION="0.1.0rc2"
-ARG BUILD_DATE="2024-03-14"
+ARG VERSION="0.1.0rc3"
 ARG MAINTAINER="little-scripts <jgdevrennes@gmail.com>"
 
 #===========
@@ -17,7 +16,6 @@ ARG MAINTAINER="little-scripts <jgdevrennes@gmail.com>"
 #===========
 LABEL little-scripts.tag="${TAG}"
 LABEL little-scripts.version="${VERSION}"
-LABEL little-scripts.build_date="${BUILD_DATE}"
 LABEL little-scripts.maintainer="${MAINTAINER}"
 LABEL little-scripts.app="scanvulnpy"
 LABEL little-scripts.src_repository="https://github.com/little-scripts/scanvulnpy"

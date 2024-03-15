@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 0.1.0rc3 (2024-03-15)
+### Improvement
+- Add random user agent for header
+
 ## 0.1.0rc2 (2024-03-14)
 
 ## 0.1.0rc1 (2024-03-13)
