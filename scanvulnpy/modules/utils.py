@@ -141,28 +141,27 @@ class Utils:
 
         # If no requirements file specified and freezing packages is enabled
         if not path_requirements and freeze:
-
             # Use 'pip freeze' command to generate requirements list with installed packages
             cmd = 'pip freeze'
             output = os.popen(cmd).read()
             packages = output.split('\n')
+            nb_packages = len(packages)
+            return packages, nb_packages
 
         elif path_requirements and not freeze:
-
             # Read the requirements file and return the list of packages
             try:
                 with open(path_requirements, "r", encoding="utf-8") as file:
                     packages = file.readlines()
+                    nb_packages = len(packages)
+                    file.close()
+                return packages, nb_packages
+
             except Exception as e:
                 self.logger.error(f"{e} ! Please check the path you send !")
-                sys.exit(1)
-
+                return None, 0
         else:
-            packages = None
-
-        nb_packages = len(packages)
-
-        return packages, nb_packages
+            return None, 0
 
     def set_payload(self, package: str = None) -> tuple:
         """
