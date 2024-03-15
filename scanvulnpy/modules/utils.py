@@ -112,7 +112,7 @@ class Utils:
 
         elif path_requirements and not freeze:
 
-            self.logger.info(f"Get PyPI packages from requirements: {path_requirements}")
+            self.logger.info(f"Get PyPI packages from: {path_requirements}")
             # Read the requirements file and return the list of packages
             try:
                 with open(path_requirements, "r", encoding="utf-8") as file:
