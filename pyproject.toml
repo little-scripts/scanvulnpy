@@ -18,7 +18,7 @@ maintainers = [
   {name = "little-scripts", email = "jgdevrennes@gmail.com"}
 ]
 
-description = "A simple scan vulnerability PyPI Packages, the data provided by https://osv.dev."
+description = "A simple Package Python to scan vulnerability PyPI Packages, the data provided by https://osv.dev."
 
 readme = "README.md"
 
