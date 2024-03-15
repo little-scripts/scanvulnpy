@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-""" scanvulnpy - A simple wrapper to scan vulnerability PyPI Packages"""
+""" scanvulnpy - A simple Package Python to scan vulnerability PyPI Packages"""
 
 __title__ = "scanvulnpy"
 __description__ = "A simple scan vulnerability PyPI Packages, the data provided by https://osv.dev"

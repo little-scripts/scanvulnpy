@@ -21,7 +21,9 @@ Module Utils
 
 import sys
 import os
+import re
 import platform
+from fake_useragent import UserAgent
 from .loggers import Logger
 
 
@@ -71,6 +73,42 @@ class Utils:
         """
         return os.name == 'posix' and platform.system() == 'Darwin'
 
+    @staticmethod
+    def set_random_user_agent():
+        """
+        Sets random user agent.
+
+        Returns:
+            str: user agent.
+        """
+        user_agent = UserAgent()
+        return user_agent.random
+
+    @staticmethod
+    def set_headers(user_agent):
+        """
+        Sets headers.
+
+        Args:
+            user_agent (str): A user agent.
+
+        Returns:
+            dict: headers.
+        """
+
+        headers = {
+            'User-Agent': '{}'.format(user_agent),
+            'content-type': 'application/json',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Language': 'fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Pragma': 'no-cache',
+            'Cache-Control': 'no-cache',
+            }
+        return headers
+
     def check_platform(self):
         """
         Checking running platform.
@@ -104,7 +142,6 @@ class Utils:
         # If no requirements file specified and freezing packages is enabled
         if not path_requirements and freeze:
 
-            self.logger.info("Pip freeze local PyPI packages")
             # Use 'pip freeze' command to generate requirements list with installed packages
             cmd = 'pip freeze'
             output = os.popen(cmd).read()
@@ -112,7 +149,6 @@ class Utils:
 
         elif path_requirements and not freeze:
 
-            self.logger.info(f"Get PyPI packages from: {path_requirements}")
             # Read the requirements file and return the list of packages
             try:
                 with open(path_requirements, "r", encoding="utf-8") as file:
@@ -127,3 +163,34 @@ class Utils:
         nb_packages = len(packages)
 
         return packages, nb_packages
+
+    def set_payload(self, package: str = None) -> tuple:
+        """
+        Sets the payload for a given package.
+
+        Args:
+            package (str): The name and version of the package.
+
+        Returns:
+            tuple: A tuple containing the payload and the package version.
+        """
+        package = package.strip()
+
+        if re.match('.*[a-z0-9].*', package):
+            if '==' in package:
+                package_name, version = package.split('==')
+                payload = {"version": version, "package": {"name": package_name, "ecosystem": "PyPI"}}
+            elif '>=' in package or '<=' in package:
+                payload = None
+                version = None
+                self.logger.error(f"{package} ! Retry with a specific version (e.g., request==2.31.0) in your requirements.")
+            else:
+                package_name = package.split()[0]
+                version = None
+                payload = {"package": {"name": package_name, "ecosystem": "PyPI"}}
+        else:
+            payload = None
+            version = None
+            self.logger.error(f"Invalid package format: {package}. Retry with a valid package name.")
+
+        return payload, version
