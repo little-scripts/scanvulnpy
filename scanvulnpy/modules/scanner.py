@@ -25,6 +25,7 @@ import re
 
 try:
     import requests
+    from fake_useragent import UserAgent
 except ModuleNotFoundError as e:
     print("Mandatory dependencies are missing:", e)
     print("Install: python -m pip install --upgrade <module-named>")
@@ -41,6 +42,42 @@ class VulnerabilityScanner:
 
     def __repr__(self):
         return "__repr__ Scanner: [logger={self.logger}]"
+
+    @staticmethod
+    def get_random_user_agent():
+        """
+        Sets random user agent.
+
+        Returns:
+            str: user agent.
+        """
+        user_agent = UserAgent()
+        return user_agent.random
+
+    @staticmethod
+    def set_headers(user_agent):
+        """
+        Sets headers.
+
+        Args:
+            user_agent (str): A user agent.
+
+        Returns:
+            dict: headers.
+        """
+
+        headers = {
+            'User-Agent': '{}'.format(user_agent),
+            'content-type': 'application/json',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Language': 'fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Pragma': 'no-cache',
+            'Cache-Control': 'no-cache',
+            }
+        return headers
 
     def set_payload(self, package: str = None) -> tuple:
         """
@@ -73,28 +110,28 @@ class VulnerabilityScanner:
 
         return payload, version
 
-    def request_api_osv_dev(self, payload:tuple = None) -> None :
+    def request_api_osv_dev(self, payload:tuple = None, header:dict = None) -> None :
         """
         Request API endpoint for the given packages.
 
         Args:
             tuple: A tuple containing the payload and the package version.
+            dict: A dict containing the header.
 
         Returns:
             json: A json response containing vulnerable and non-vulnerable packages.
         """
         # API endpoint for vulnerability Scanning
         url = 'https://api.osv.dev/v1/query'
-        header = {'content-type': 'application/json'}
         response = requests.post(url, json=payload, headers=header, timeout=10)
         return response
 
-    def log_result_request(self, nb_packs: int, verbose: str, response: str, payload: dict, package: str, version: str, count_vulnerability: int, count_non_vulnerable: int, list_packages_vulnerable: list, list_packages_non_vulnerable: list) -> tuple:
+    def log_result_request(self, nb_packages: int, verbose: str, response: str, payload: dict, package: str, version: str, count_vulnerability: int, count_non_vulnerable: int, list_packages_vulnerable: list, list_packages_non_vulnerable: list) -> tuple:
         """
         Logs the result of Scanning a single package.
 
         Args:
-            nb_packs (int): Number of packages.
+            nb_packages (int): Number of packages.
             verbose (str): verbose vulnerability.
             response (Response): HTTP response object from the vulnerability Scan.
             package (str): Name of the package being Scanned.
@@ -115,20 +152,20 @@ class VulnerabilityScanner:
             # Log vulnerability details
             if version:
                 if verbose == 'vulns':
-                    self.logger.warning(f'Scan {nb_packs}: {response.text}')
+                    self.logger.warning(f'Scan {nb_packages}: {response.text}')
                 else:
-                    self.logger.warning(f'Scan {nb_packs}: {payload}')
+                    self.logger.warning(f'Scan {nb_packages}: {payload}')
             else:
-                self.logger.warning(f"Scan {nb_packs}: {payload}...We can't determinate if your version is affected. Retry with a specific version(e.g., request==2.31.0) in your requirements.")
+                self.logger.warning(f"Scan {nb_packages}: {payload}...We can't determinate if your version is affected. Retry with a specific version(e.g., request==2.31.0) in your requirements.")
         # If no vulnerabilities found and response is successful
         elif response.text == '{}' and response.status_code == 200:
             count_non_vulnerable += 1
             list_packages_non_vulnerable.append(package.strip())
-            self.logger.info(f'Scan {nb_packs}: {payload}')
+            self.logger.info(f'Scan {nb_packages}: {payload}')
 
-        nb_packs -= 1
+        nb_packages -= 1
 
-        return nb_packs, count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable
+        return nb_packages, count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable
 
     def final_results(self, count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable):
         """
@@ -178,13 +215,12 @@ class VulnerabilityScanner:
         self.logger.info(f"Scan vulnerability on {nb_packages} PyPI packages, this may take few seconds...")
 
         # Initialize counters and lists to store results
-        count_non_vulnerable = 0
-        count_vulnerability = 0
+        count_non_vulnerable = int(0)
+        count_vulnerability = int(0)
         list_packages_non_vulnerable = []
         list_packages_vulnerable = []
-        nb_packs = nb_packages
 
-        # Instantiate Object Scanner
+        # Instantiate Objects
         scanvuln = VulnerabilityScanner()
 
         # Iterate over packages and Scan each one
@@ -193,9 +229,11 @@ class VulnerabilityScanner:
             payload, version = scanvuln.set_payload(package)
             # If payload send POST request to the API endpoint
             if payload:
-                response = scanvuln.request_api_osv_dev(payload)
+                user_agent = scanvuln.get_random_user_agent()
+                header = scanvuln.set_headers(user_agent)
+                response = scanvuln.request_api_osv_dev(payload, header)
                 # Log the Scan results and update counters and lists
-                nb_packs, count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable = scanvuln.log_result_request(nb_packs, verbose, response, payload, package, version, count_vulnerability, count_non_vulnerable, list_packages_vulnerable, list_packages_non_vulnerable)
+                nb_packages, count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable = scanvuln.log_result_request(nb_packages, verbose, response, payload, package, version, count_vulnerability, count_non_vulnerable, list_packages_vulnerable, list_packages_non_vulnerable)
 
         # Log the final results based on the number of vulnerabilities found
         count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable = scanvuln.final_results(count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable)
