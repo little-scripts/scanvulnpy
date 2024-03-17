@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Run as package: python -m scanvulnpy
+# Run as module: python -m scanvulnpy
 
 """
 Scanner vulnerability PyPI Packages, the data provided by https://osv.dev
@@ -32,12 +32,14 @@ from .__version__ import (
     __version__,
 )
 
+
 def main():
     """
     Scanner vulnerability PyPI Packages.
     """
     if not Utils.check_platform:
-        print("\nThe script doesn't support your platform for the moment !\nFeel free to report issues: https://github.com/little-scripts/scanvulnpy/issues")
+        print("\nThe script doesn't support your platform for the moment !\nFeel free to report issues: "
+              "https://github.com/little-scripts/scanvulnpy/issues")
         sys.exit(0)
     else:
         print_banner(__author__, __version__)
@@ -45,7 +47,7 @@ def main():
     # Setup (Instantiate Object)
     options = cmd_options()
     utils = Utils()
-    scanvuln = VulnerabilityScanner()
+    scandal = VulnerabilityScanner()
     logger = Logger()
 
     # Get packages
@@ -64,18 +66,25 @@ def main():
     logger.info(f"Scan vulnerability on {nb_packages} PyPI packages")
     # Iterate over packages and Scan each one
     for package in packages:
-        # Set payload and header for request the API endpoint
-        payload, version = utils.set_payload(package)
-        user_agent = utils.set_random_user_agent()
-        header = utils.set_headers(user_agent)
-        # If payload send POST request to the API endpoint
-        if payload:
-            response = scanvuln.request_api_vuln(payload, header)
-            # Log the Scan results and update counters and lists
-            nb_packages, count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable = scanvuln.result_scan(nb_packages, options.verbose, response, payload, package, version, count_vulnerability, count_non_vulnerable, list_packages_vulnerable, list_packages_non_vulnerable)
+        package = package.strip()
+        if package != '':
+            # Set payload and header for request the API endpoint
+            payload, version = utils.set_payload(package)
+            user_agent = utils.set_random_user_agent()
+            header = utils.set_headers(user_agent)
+            # If payload send POST request to the API endpoint
+            if payload:
+                response = scandal.request_api_osv(payload, header)
+
+                # Log the Scan results and update counters and lists
+                (nb_packages, count_non_vulnerable, count_vulnerability, list_packages_vulnerable,
+                 list_packages_non_vulnerable) = scandal.result_scan(
+                    nb_packages, options.verbose, response, payload, package, version, count_vulnerability,
+                    count_non_vulnerable, list_packages_vulnerable, list_packages_non_vulnerable)
 
     # Log the final results based on the number of vulnerabilities found
-    count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable = scanvuln.final_results(count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable)
+    scandal.final_results(count_non_vulnerable, count_vulnerability, list_packages_vulnerable,
+                          list_packages_non_vulnerable)
 
 
 if __name__ == '__main__':

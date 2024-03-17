@@ -1,7 +1,5 @@
 # Pytest
 
-* Launch inside folder scanvulnpy :
-
 Unit tests:
 ```python
 coverage run -m pytest -v -m smoke --cov-report term-missing

@@ -22,6 +22,7 @@ Module cmd
 
 import argparse
 
+
 def cmd_options():
     """
     Returns the options send by user in command-line.

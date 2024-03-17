@@ -19,7 +19,6 @@
 Module Utils
 """
 
-import sys
 import os
 import re
 import platform
@@ -106,7 +105,7 @@ class Utils:
             'Upgrade-Insecure-Requests': '1',
             'Pragma': 'no-cache',
             'Cache-Control': 'no-cache',
-            }
+        }
         return headers
 
     def check_platform(self):
@@ -125,7 +124,7 @@ class Utils:
         else:
             return False
 
-    def get_requirements(self, path:str = None, freeze:bool = False):
+    def get_requirements(self, path: str = None, freeze: bool = False):
         """
         Retrieves the list of packages from the requirements file.
 
@@ -145,6 +144,7 @@ class Utils:
             cmd = 'pip freeze'
             output = os.popen(cmd).read()
             packages = output.split('\n')
+            packages.remove(packages[-1])
             nb_packages = len(packages)
             return packages, nb_packages
 
@@ -153,9 +153,10 @@ class Utils:
             try:
                 with open(path_requirements, "r", encoding="utf-8") as file:
                     packages = file.readlines()
-                    nb_packages = len(packages)
-                    file.close()
-                return packages, nb_packages
+                    # Filter empty line
+                    filtered_packages = [x.strip() for x in packages if x.strip() != '' and '\n' in x]
+                    nb_packages = len(filtered_packages)
+                return filtered_packages, nb_packages
 
             except Exception as e:
                 self.logger.error(f"{e} ! Please check the path you send !")
@@ -173,7 +174,6 @@ class Utils:
         Returns:
             tuple: A tuple containing the payload and the package version.
         """
-        package = package.strip()
 
         if re.match('.*[a-z0-9].*', package):
             if '==' in package:
@@ -182,7 +182,8 @@ class Utils:
             elif '>=' in package or '<=' in package:
                 payload = None
                 version = None
-                self.logger.error(f"{package} ! Retry with a specific version (e.g., request==2.31.0) in your requirements.")
+                self.logger.error(f"{package} ! Retry with a specific version (e.g., request==2.31.0) in your "
+                                  f"requirements.")
             else:
                 package_name = package.split()[0]
                 version = None

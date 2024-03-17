@@ -49,6 +49,7 @@ def get_terminal_width() -> int:
 
     return width
 
+
 def print_banner(author, version) -> None:
     """docstring
     """

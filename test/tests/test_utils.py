@@ -9,10 +9,11 @@ from scanvulnpy.scanvulnpy.modules.utils import Utils
 
 
 @pytest.mark.smoke
-class TestPlatform():
+class TestPlatform:
     """
     Test Platform
     """
+
     def test_check_platform_windows(self, utils):
         """ Test de la méthode check_platform pour le cas où la plate-forme est Windows
         """
@@ -31,33 +32,34 @@ class TestPlatform():
         utils.platform_os = 'mac'
         assert utils.check_platform() is False
 
+
 @pytest.mark.smoke
-class TestGetRequirements():
+class TestGetRequirements:
     """
     Test Get Requirements
     """
+
     def test_get_requirements_with_path_and_no_freeze(self, utils, tmp_path):
-        """
-        with_path_and_no_freeze
+        """ Test de la méthode get_requirements avec un chemin de fichier et freeze à False
         """
         # Créez un fichier de requirements fictif pour le test
         requirements_file = tmp_path / "requirements.txt"
-        requirements_file.write_text("package1\npackage2\npackage3")
+        requirements_file.write_text("package1\npackage2\npackage3\n")
 
         # Appelez la méthode get_requirements avec un chemin de fichier et freeze à False
         packages, nb_packages = utils.get_requirements(str(requirements_file), freeze=False)
 
         # Vérifiez que la méthode retourne les packages corrects
-        assert packages == ["package1\n", "package2\n", "package3"]
+        assert packages == ["package1", "package2", "package3"]
         assert nb_packages == 3
 
     def test_get_requirements_without_path_and_freeze(self, utils, monkeypatch):
+        """ Test de la méthode get_requirements sans chemin de fichier et freeze à True
         """
-        without_path_and_freeze
-        """
+
         # Simulez l'exécution de 'pip freeze' pour générer la liste des packages
         def mock_pip_freeze(cmd):
-            return "packageA\npackageB\npackageC"
+            return "packageA\npackageB\npackageC\n"
 
         # Utilisez io.StringIO pour simuler la lecture d'un fichier
         mock_output = io.StringIO(mock_pip_freeze(""))
@@ -73,8 +75,7 @@ class TestGetRequirements():
         assert nb_packages == 3
 
     def test_get_requirements_with_invalid_path(self, utils):
-        """
-        with_invalid_path
+        """ Test de la méthode get_requirements avec un chemin de fichier invalide
         """
         # Appelez la méthode get_requirements avec un chemin de fichier invalide
         packages, nb_packages = utils.get_requirements(path="invalid/path", freeze=False)
@@ -83,6 +84,7 @@ class TestGetRequirements():
         assert packages is None
         assert nb_packages == 0
 
+
 @pytest.mark.smoke
 class TestSetPayload:
     """
@@ -90,8 +92,7 @@ class TestSetPayload:
     """
 
     def test_set_payload_valid_package_with_version(self, utils):
-        """
-        package_with_version
+        """ Test de la méthode set_payload avec package valide avec version
         """
         package = "requests==2.26.0"
         payload, version = utils.set_payload(package)
@@ -100,8 +101,7 @@ class TestSetPayload:
         assert version == "2.26.0"
 
     def test_set_payload_valid_package_without_version(self, utils):
-        """
-        package_without_version
+        """ Test de la méthode set_payload avec package valide sans version
         """
         package = "requests"
         payload, version = utils.set_payload(package)
@@ -110,8 +110,7 @@ class TestSetPayload:
         assert version is None
 
     def test_set_payload_invalid_version_format(self, utils):
-        """
-        with_invalid_version_format
+        """ Test de la méthode set_payload avec un format de version invalide (<=)
         """
         package = "requests<=2.26.0"
         payload, version = utils.set_payload(package)
@@ -119,8 +118,7 @@ class TestSetPayload:
         assert version is None
 
     def test_set_payload_package_without_alphanumeric_characters(self, utils):
-        """
-        without_alphanumeric_characters
+        """ Test de la méthode set_payload sans caractères alphanumerique
         """
         package = "!@#$%^&*()_+"
         payload, version = utils.set_payload(package)
@@ -128,8 +126,7 @@ class TestSetPayload:
         assert version is None
 
     def test_set_payload_package_with_invalid_version_format(self, utils):
-        """
-        with_invalid_version_format
+        """ Test de la méthode set_payload avec un format de version invalide (>=)
         """
         package = "requests>=2.26.0"
         payload, version = utils.set_payload(package)
@@ -137,8 +134,7 @@ class TestSetPayload:
         assert version is None
 
     def test_set_payload_package_with_empty_string(self, utils):
-        """
-        with_empty_string
+        """ Test de la méthode set_payload avec une ligne vide
         """
         package = ""
         payload, version = utils.set_payload(package)

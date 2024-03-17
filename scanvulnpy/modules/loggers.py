@@ -30,6 +30,7 @@ except ModuleNotFoundError as e:
     print("Install: python -m pip install --upgrade <module-named>")
     sys.exit(1)
 
+
 class Logger:
     """Controller class for Level."""
 
@@ -40,28 +41,33 @@ class Logger:
         """docstring
         """
         current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S:%f')
-        console.print("{} | {}INFO{} | {}".format( current_date, "[bold grey]", "[/bold grey]", message), highlight=False, overflow="ignore", crop=False)
+        console.print("{} | {}INFO{} | {}".format(current_date, "[bold grey]", "[/bold grey]", message),
+                      highlight=False, overflow="ignore", crop=False)
 
     def success(self, message):
         """docstring
         """
         current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S:%f')
-        console.print("{} | {}SUCCESS{} | {}".format( current_date, "[bold green]", "[/bold green]", message), highlight=False, overflow="ignore", crop=False)
+        console.print("{} | {}SUCCESS{} | {}".format(current_date, "[bold green]", "[/bold green]", message),
+                      highlight=False, overflow="ignore", crop=False)
 
     def debug(self, message):
         """docstring
         """
         current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S:%f')
-        console.print("{} | {}DEBUG{} | {}".format( current_date, "[bold yellow]", "[/bold yellow]", message), highlight=False, overflow="ignore", crop=False)
+        console.print("{} | {}DEBUG{} | {}".format(current_date, "[bold yellow]", "[/bold yellow]", message),
+                      highlight=False, overflow="ignore", crop=False)
 
     def warning(self, message):
         """docstring
         """
         current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S:%f')
-        console.print("{} | {}WARN{} | {}".format( current_date, "[bold orange3]", "[/bold orange3]", message), highlight=False, overflow="ignore", crop=False)
+        console.print("{} | {}WARN{} | {}".format(current_date, "[bold orange3]", "[/bold orange3]", message),
+                      highlight=False, overflow="ignore", crop=False)
 
     def error(self, message):
         """docstring
         """
         current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S:%f')
-        console.print("{} | {}ERROR{} | {}".format( current_date, "[bold red]", "[/bold red]", message), highlight=False, overflow="ignore", crop=False)
+        console.print("{} | {}ERROR{} | {}".format(current_date, "[bold red]", "[/bold red]", message), highlight=False,
+                      overflow="ignore", crop=False)
