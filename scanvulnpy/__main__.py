@@ -64,14 +64,17 @@ def main():
 
     # Log start of the Scan
     logger.info(f"Scan vulnerability on {nb_packages} PyPI packages")
+
     # Iterate over packages and Scan each one
     for package in packages:
         package = package.strip()
         if package != '':
+            
             # Set payload and header for request the API endpoint
             payload, version = utils.set_payload(package)
             user_agent = utils.set_random_user_agent()
             header = utils.set_headers(user_agent)
+
             # If payload send POST request to the API endpoint
             if payload:
                 response = scandal.request_api_osv(payload, header)
