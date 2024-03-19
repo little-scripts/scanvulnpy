@@ -80,17 +80,20 @@ def main():
             # If payload send POST request to the API endpoint
             if payload:
                 response = scandal.request_api_osv(payload, header)
+                if options.verbose != 'package':
+                    count_progress_bar += 1
+                    utils.progress_bar(count_progress_bar, nb_packages)
 
                 # Log the Scan results and update counters and lists
-                count_progress_bar += 1
-                utils.progress_bar(count_progress_bar, nb_packages)
-                (count_non_vulnerable, count_vulnerability, list_packages_vulnerable,
-                 list_packages_non_vulnerable) = scandal.result_scan(response, package,
-                                                                     count_vulnerability, count_non_vulnerable,
-                                                                     list_packages_vulnerable,
-                                                                     list_packages_non_vulnerable)
+                (nb_packages, count_non_vulnerable, count_vulnerability, list_packages_vulnerable,
+                 list_packages_non_vulnerable) = scandal.store_result(nb_packages, options.verbose, response,
+                                                                      payload, package, version,
+                                                                      count_vulnerability, count_non_vulnerable,
+                                                                      list_packages_vulnerable,
+                                                                      list_packages_non_vulnerable)
 
     # Log the final results based on the number of vulnerabilities found
+    logger.info("Scan done ")
     scandal.display_results(count_non_vulnerable, count_vulnerability, list_packages_vulnerable,
                             list_packages_non_vulnerable)
 
