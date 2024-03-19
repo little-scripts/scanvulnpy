@@ -10,7 +10,7 @@ if [ -f /.dockerenv ]; then
     echo -e "${GREEN}"
     echo "This script is running inside docker, as it should 🤩"
     echo -e "${NOCOLOR}"
-    python -m scanvulnpy -r /home/little-scripts/scanvulnpy/scanvulnpy-local-requirements.txt --verbose vulns
+    python -m scanvulnpy -r /home/little-scripts/scanvulnpy/scanvulnpy-local-requirements.txt --verbose package
 else
     echo -e "${RED}"
     echo "This script is not running inside docker, as it should 😢"

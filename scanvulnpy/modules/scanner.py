@@ -37,13 +37,16 @@ class VulnerabilityScanner:
 
     def __init__(self):
         self.logger = Logger()
+        # API endpoint for vulnerability Scanning
+        self.url = 'https://api.osv.dev/v1/query'
 
     def __repr__(self):
         return "__repr__ Scanner: [logger={self.logger}]"
 
-    def result_scan(self, nb_packages: int, verbose: str, response: str, payload: dict, package: str, version: str,
-                    count_vulnerability: int, count_non_vulnerable: int, list_packages_vulnerable: list,
-                    list_packages_non_vulnerable: list) -> tuple:
+    def store_result(self, nb_packages: int = None, verbose: str = None,
+                     response: str = None, payload: dict = None, package: str = None, version: str = None,
+                     count_vulnerability: int = None, count_non_vulnerable: int = None,
+                     list_packages_vulnerable: list = None, list_packages_non_vulnerable: list = None):
         """
         Logs the result of Scanning a single package.
 
@@ -51,45 +54,51 @@ class VulnerabilityScanner:
             nb_packages (int): Number of packages.
             verbose (str): verbose vulnerability.
             response (Response): HTTP response object from the vulnerability Scan.
-            payload (dict): Payload.
+            payload (dict): Dictionary payload.
             package (str): Name of the package being Scanned.
             version (str): Version of the package being Scanned (if available).
             count_vulnerability (int): Number of vulnerable packages.
             count_non_vulnerable (int): Number of non-vulnerable packages.
             list_packages_vulnerable (list): List of vulnerable packages.
-            list_packages_non_vulnerable (list): List of non-vulnerable packages.
+            list_packages_non_vulnerable (list): List of non-vulnerable packages
 
         Returns:
             tuple: A tuple containing updated counts of vulnerable and non-vulnerable packages,
             and updated lists of vulnerable and non-vulnerable packages.
         """
-        # Check if the response contains vulnerability information
-        if response.text != '{}':
-            count_vulnerability += 1
-            list_packages_vulnerable.append(package.strip())
-            # Log vulnerability details
-            if version:
-                if verbose == 'vulns':
-                    self.logger.warning(f'Scan {nb_packages}: {response.text}')
+        if verbose == 'package':
+            # Check if the response contains vulnerability information
+            if response.text != '{}':
+                count_vulnerability += 1
+                list_packages_vulnerable.append(f"{package.strip()}: {response.text}")
+                # Log vulnerability details
+                if version:
+                    self.logger.warning(f'Scan {payload}')
                 else:
-                    self.logger.warning(f'Scan {nb_packages}: {payload}')
-            else:
-                self.logger.warning(f"Scan {nb_packages}: {payload}...We can't determinate if your version is "
-                                    f"affected. Retry with a specific version(e.g., request==2.31.0) in your "
-                                    f"requirements.")
-        # If no vulnerabilities found and response is successful
-        elif response.text == '{}' and response.status_code == 200:
-            count_non_vulnerable += 1
-            list_packages_non_vulnerable.append(package.strip())
-            self.logger.info(f'Scan {nb_packages}: {payload}')
-
-        nb_packages -= 1
+                    self.logger.warning(
+                        f"Scan {payload}...We can't determinate if your version is affected. Retry with a specific "
+                        f"version(e.g., request==2.31.0) in your requirements.")
+            # If no vulnerabilities found and response is successful
+            elif response.text == '{}' and response.status_code == 200:
+                count_non_vulnerable += 1
+                list_packages_non_vulnerable.append(package.strip())
+                self.logger.info(f'Scan {payload}')
+        else:
+            # Check if the response contains vulnerability information
+            if response.text != '{}':
+                count_vulnerability += 1
+                list_packages_vulnerable.append(package.strip())
+            # If no vulnerabilities found and response is successful
+            elif response.text == '{}' and response.status_code == 200:
+                count_non_vulnerable += 1
+                list_packages_non_vulnerable.append(package.strip())
 
         return (nb_packages, count_non_vulnerable, count_vulnerability, list_packages_vulnerable,
                 list_packages_non_vulnerable)
 
-    def final_results(self, count_non_vulnerable, count_vulnerability, list_packages_vulnerable,
-                      list_packages_non_vulnerable):
+    def display_results(self, count_non_vulnerable: int = None, count_vulnerability: int = None,
+                        list_packages_vulnerable: list = None,
+                        list_packages_non_vulnerable: list = None):
         """
         Logs the result of Scanning a single package.
 
@@ -108,7 +117,6 @@ class VulnerabilityScanner:
         total_packages = count_non_vulnerable + count_vulnerability
         total_vulnerabilities = total_packages - count_non_vulnerable
 
-        self.logger.info("----------------- Results ----------------------")
         if count_vulnerability == 0:
             # Log if no vulnerabilities found
             self.logger.info(f"{total_packages} Package(s) scanned")
@@ -133,7 +141,5 @@ class VulnerabilityScanner:
         Returns:
             json: response.
         """
-        # API endpoint for vulnerability Scanning
-        url = 'https://api.osv.dev/v1/query'
-        response = requests.post(url, json=payload, headers=header, timeout=10)
+        response = requests.post(self.url, json=payload, headers=header, timeout=10)
         return response
