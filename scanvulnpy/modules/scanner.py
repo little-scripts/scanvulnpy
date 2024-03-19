@@ -93,7 +93,8 @@ class VulnerabilityScanner:
                 count_non_vulnerable += 1
                 list_packages_non_vulnerable.append(package.strip())
 
-        return nb_packages, count_non_vulnerable, count_vulnerability, list_packages_vulnerable, list_packages_non_vulnerable
+        return (nb_packages, count_non_vulnerable, count_vulnerability, list_packages_vulnerable,
+                list_packages_non_vulnerable)
 
     def display_results(self, count_non_vulnerable: int = None, count_vulnerability: int = None,
                         list_packages_vulnerable: list = None,
