@@ -1,5 +1,11 @@
 # ChangeLog
 
+## 0.1.0rc5 (2024-03-20)
+### Improvement
+- Progress bar stdout
+
+## 0.1.0rc4 (2024-03-15)
+
 ## 0.1.0rc3 (2024-03-15)
 ### Improvement
 - Add random user agent for header
