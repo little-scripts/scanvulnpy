@@ -61,15 +61,17 @@ def main():
     count_vulnerability = int(0)
     list_packages_non_vulnerable = []
     list_packages_vulnerable = []
+    count_progress_bar = int(0)
 
     # Log start of the Scan
     logger.info(f"Scan vulnerability on {nb_packages} PyPI packages")
 
     # Iterate over packages and Scan each one
     for package in packages:
+
         package = package.strip()
         if package != '':
-            
+
             # Set payload and header for request the API endpoint
             payload, version = utils.set_payload(package)
             user_agent = utils.set_random_user_agent()
@@ -80,14 +82,17 @@ def main():
                 response = scandal.request_api_osv(payload, header)
 
                 # Log the Scan results and update counters and lists
-                (nb_packages, count_non_vulnerable, count_vulnerability, list_packages_vulnerable,
-                 list_packages_non_vulnerable) = scandal.result_scan(
-                    nb_packages, options.verbose, response, payload, package, version, count_vulnerability,
-                    count_non_vulnerable, list_packages_vulnerable, list_packages_non_vulnerable)
+                count_progress_bar += 1
+                utils.progress_bar(count_progress_bar, nb_packages)
+                (count_non_vulnerable, count_vulnerability, list_packages_vulnerable,
+                 list_packages_non_vulnerable) = scandal.result_scan(response, package,
+                                                                     count_vulnerability, count_non_vulnerable,
+                                                                     list_packages_vulnerable,
+                                                                     list_packages_non_vulnerable)
 
     # Log the final results based on the number of vulnerabilities found
-    scandal.final_results(count_non_vulnerable, count_vulnerability, list_packages_vulnerable,
-                          list_packages_non_vulnerable)
+    scandal.display_results(count_non_vulnerable, count_vulnerability, list_packages_vulnerable,
+                            list_packages_non_vulnerable)
 
 
 if __name__ == '__main__':

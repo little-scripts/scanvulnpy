@@ -19,6 +19,7 @@
 Module Utils
 """
 
+import sys
 import os
 import re
 import platform
@@ -194,3 +195,22 @@ class Utils:
             self.logger.error(f"Invalid package format: {package}. Retry with a valid package name.")
 
         return payload, version
+
+    def progress_bar(self, count: int = None, total: int = None, status: str = ''):
+        """
+        Sets the payload for a given package.
+
+        Args:
+            count (int): count package.
+            total (int): total package.
+            status (str): status message.
+
+        Returns:
+            None
+        """
+        bar_len = 100
+        filled_len = int(round(bar_len * count / float(total)))
+        percents = round(100.0 * count / float(total), 1)
+        bar = '■' * filled_len + ' ' * (bar_len - filled_len)
+        sys.stdout.write('[%s] %s%s ...%s\r' % (bar, percents, '%', status))
+        sys.stdout.flush()
