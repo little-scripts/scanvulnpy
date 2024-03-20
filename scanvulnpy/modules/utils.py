@@ -22,6 +22,7 @@ Module Utils
 import sys
 import os
 import re
+from typing import Optional, Tuple
 import platform
 from fake_useragent import UserAgent
 from .loggers import Logger
@@ -165,7 +166,7 @@ class Utils:
         else:
             return None, 0
 
-    def set_payload(self, package: str = None) -> tuple:
+    def set_payload(self, package: str = None) -> Tuple[Optional[dict], Optional[str]]:
         """
         Sets the payload for a given package.
 
@@ -175,24 +176,21 @@ class Utils:
         Returns:
             tuple: A tuple containing the payload and the package version.
         """
+        payload = None
+        version = None
 
-        if re.match('.*[a-z0-9].*', package):
+        if package and re.match(r'^[a-zA-Z0-9_.-]+(?:==[0-9]+(?:\.[0-9]+)*(?:\.\w+)?)?$', package):
             if '==' in package:
                 package_name, version = package.split('==')
                 payload = {"version": version, "package": {"name": package_name, "ecosystem": "PyPI"}}
             elif '>=' in package or '<=' in package:
-                payload = None
-                version = None
-                self.logger.error(f"{package} ! Retry with a specific version (e.g., request==2.31.0) in your "
-                                  f"requirements.")
+                self.logger.error(
+                    f"{package}! Retry with a specific version (e.g., request==2.31.0) in your requirements.")
             else:
                 package_name = package.split()[0]
-                version = None
                 payload = {"package": {"name": package_name, "ecosystem": "PyPI"}}
         else:
-            payload = None
-            version = None
-            self.logger.error(f"Invalid package format: {package}. Retry with a valid package name.")
+            self.logger.error(f"Invalid package format: {package} Retry with a valid package name.")
 
         return payload, version
 

@@ -141,5 +141,4 @@ class VulnerabilityScanner:
         Returns:
             json: response.
         """
-        response = requests.post(self.url, json=payload, headers=header, timeout=10)
-        return response
+        return requests.post(self.url, json=payload, headers=header, timeout=10)
