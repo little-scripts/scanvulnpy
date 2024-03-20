@@ -27,27 +27,34 @@ Package Python to scan vulnerability PyPI Packages, the data provided by https:/
 
 
 ## Installation from sources
-```python
-pip install scanvulnpy
+```sh
+python -m pip install scanvulnpy
+```
+
+## Cloning the repository
+```sh
+git clone https://github.com/little-scripts/scanvulnpy.git
+cd scanvulnpy/
+python -m pip install -r requirements.txt
 ```
 
 ### Usage
-```python
-python -m scanvulnpy
+```sh
+python -m scanvulnpy -h
 ```
 
 You can find here a complete list of options :
 
-```python
-usage: python -m scanvulnpy [-h] [-f FREEZE] [-r REQUIREMENTS] [--verbose VERBOSE] [-nc NO_COLOR]
+```markdown
+usage: python -m scanvulnpy [-h] [-f FREEZE] [-r REQUIREMENTS] [--verbose VERBOSE]
 
 A simple Package Python to scan vulnerability PyPI Packages, the data provided by https://osv.dev
 
 options:
   -h, --help         show this help message and exit
-  -f FREEZE          enable by default, disable if '-r <path>' is setting
-  -r REQUIREMENTS    path requirements (e.g. -r <path>)
-  --verbose VERBOSE  verbose details vulns(e.g. --verbose vulns)
+  -f FREEZE          enable by default, disable if '-r path/to/requirements' is setting
+  -r REQUIREMENTS    path requirements (e.g. -r path/to/requirements)
+  --verbose VERBOSE  details package(e.g. --verbose package)
 ```
 
 ## Docker setup
@@ -55,9 +62,10 @@ options:
 ### Usage
 Build and Run the Docker image:
 
-```python
-$ git clone https://github.com/little-scripts/scanvulnpy.git
-$ ./scanvulnpy.sh --vulns
+```sh
+git clone https://github.com/little-scripts/scanvulnpy.git
+cd scanvulnpy/
+./scanvulnpy.sh --package
 ```
 
 ## Contributing

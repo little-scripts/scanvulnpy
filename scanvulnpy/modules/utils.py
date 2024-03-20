@@ -22,6 +22,7 @@ Module Utils
 import sys
 import os
 import re
+from typing import Optional, Tuple
 import platform
 from fake_useragent import UserAgent
 from .loggers import Logger
@@ -106,7 +107,7 @@ class Utils:
             'Upgrade-Insecure-Requests': '1',
             'Pragma': 'no-cache',
             'Cache-Control': 'no-cache',
-            }
+        }
         return headers
 
     def check_platform(self):
@@ -125,7 +126,7 @@ class Utils:
         else:
             return False
 
-    def get_requirements(self, path:str = None, freeze:bool = False):
+    def get_requirements(self, path: str = None, freeze: bool = False):
         """
         Retrieves the list of packages from the requirements file.
 
@@ -141,30 +142,31 @@ class Utils:
 
         # If no requirements file specified and freezing packages is enabled
         if not path_requirements and freeze:
-
             # Use 'pip freeze' command to generate requirements list with installed packages
             cmd = 'pip freeze'
             output = os.popen(cmd).read()
             packages = output.split('\n')
+            packages.remove(packages[-1])
+            nb_packages = len(packages)
+            return packages, nb_packages
 
         elif path_requirements and not freeze:
-
             # Read the requirements file and return the list of packages
             try:
                 with open(path_requirements, "r", encoding="utf-8") as file:
                     packages = file.readlines()
+                    # Filter empty line
+                    filtered_packages = [x.strip() for x in packages if x.strip() != '' and '\n' in x]
+                    nb_packages = len(filtered_packages)
+                return filtered_packages, nb_packages
+
             except Exception as e:
                 self.logger.error(f"{e} ! Please check the path you send !")
-                sys.exit(1)
-
+                return None, 0
         else:
-            packages = None
+            return None, 0
 
-        nb_packages = len(packages)
-
-        return packages, nb_packages
-
-    def set_payload(self, package: str = None) -> tuple:
+    def set_payload(self, package: str = None) -> Tuple[Optional[dict], Optional[str]]:
         """
         Sets the payload for a given package.
 
@@ -174,23 +176,39 @@ class Utils:
         Returns:
             tuple: A tuple containing the payload and the package version.
         """
-        package = package.strip()
+        payload = None
+        version = None
 
-        if re.match('.*[a-z0-9].*', package):
+        if package and re.match(r'^[a-zA-Z0-9_.-]+(?:==[0-9]+(?:\.[0-9]+)*(?:\.\w+)?)?$', package):
             if '==' in package:
                 package_name, version = package.split('==')
                 payload = {"version": version, "package": {"name": package_name, "ecosystem": "PyPI"}}
             elif '>=' in package or '<=' in package:
-                payload = None
-                version = None
-                self.logger.error(f"{package} ! Retry with a specific version (e.g., request==2.31.0) in your requirements.")
+                self.logger.error(
+                    f"{package}! Retry with a specific version (e.g., request==2.31.0) in your requirements.")
             else:
                 package_name = package.split()[0]
-                version = None
                 payload = {"package": {"name": package_name, "ecosystem": "PyPI"}}
         else:
-            payload = None
-            version = None
-            self.logger.error(f"Invalid package format: {package}. Retry with a valid package name.")
+            self.logger.error(f"Invalid package format: {package} Retry with a valid package name.")
 
         return payload, version
+
+    def progress_bar(self, count: int = None, total: int = None, status: str = ''):
+        """
+        Sets the payload for a given package.
+
+        Args:
+            count (int): count package.
+            total (int): total package.
+            status (str): status message.
+
+        Returns:
+            None
+        """
+        bar_len = 100
+        filled_len = int(round(bar_len * count / float(total)))
+        percents = round(100.0 * count / float(total), 1)
+        bar = '■' * filled_len + ' ' * (bar_len - filled_len)
+        sys.stdout.write('[%s] %s%s ...%s\r' % (bar, percents, '%', status))
+        sys.stdout.flush()

@@ -22,6 +22,7 @@ Module cmd
 
 import argparse
 
+
 def cmd_options():
     """
     Returns the options send by user in command-line.
@@ -58,7 +59,7 @@ def cmd_options():
         dest="verbose",
         default=False,
         required=False,
-        help="verbose details vulns(e.g. --verbose vulns)",
+        help="details package(e.g. --verbose package)",
     )
 
     options = parser.parse_args()
