@@ -16,14 +16,14 @@ jobs:
   CI:
 
     runs-on: ubuntu-latest
+    using: 'node20'
 
     steps:
-    - uses: actions/checkout@v3
-      using: 'node20'
+    - name: Checkout
+      uses: actions/checkout@v3
 
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
-      using: 'node20'
       with:
         python-version: "3.11"
 
@@ -53,7 +53,7 @@ jobs:
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-    - name: Pip build
+    - name: Build
       run: |
         python3 -m build --wheel
     # - name: Pip install
