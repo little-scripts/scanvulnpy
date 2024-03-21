@@ -37,6 +37,7 @@ jobs:
     - name: Run Unit tests and collect coverage
       uses: codecov/codecov-ats@v0
       env:
+        CODECOV_STATIC_TOKEN: ${{ secrets.CODECOV_STATIC_TOKEN }}
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: pytest -v -m smoke --cov app ${{ env.CODECOV_ATS_TESTS }}
     - name: Upload coverage to Codecov
