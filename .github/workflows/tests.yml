@@ -1,13 +1,13 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: Python pip build
+name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
 
 permissions:
   contents: read
@@ -34,6 +34,20 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=25 --max-line-length=512 --statistics
+    - name: Unit tests
+      uses: codecov/codecov-ats@v0
+      env:
+        CODECOV_STATIC_TOKEN: ${{ secrets.CODECOV_STATIC_TOKEN }}
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    - name: Run tests and collect coverage
+      run: pytest -v -m smoke --cov app ${{ env.CODECOV_ATS_TESTS }}
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4-beta
+      with:
+        flags: smoke
+        verbose: true
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     - name: Pip build
       run: |
         python3 -m build --wheel

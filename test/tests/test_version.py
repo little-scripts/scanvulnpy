@@ -18,4 +18,3 @@ class TestVersionFile:
         assert version.__author__ == 'little-scripts developers', 'Author mismatch in version file'
         assert version.__license__ == 'Apache 2.0', 'License mismatch in version file'
         assert version.__uri__ == 'https://github.com/little-scripts/scanvulnpy', 'URI mismatch in version file'
-

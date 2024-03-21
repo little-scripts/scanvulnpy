@@ -138,10 +138,8 @@ class Utils:
             list: List of package names and versions.
         """
         # Get the path to the requirements file from the configuration
-        path_requirements = path
-
         # If no requirements file specified and freezing packages is enabled
-        if not path_requirements and freeze:
+        if not path and freeze:
             # Use 'pip freeze' command to generate requirements list with installed packages
             cmd = 'pip freeze'
             output = os.popen(cmd).read()
@@ -150,10 +148,10 @@ class Utils:
             nb_packages = len(packages)
             return packages, nb_packages
 
-        elif path_requirements and not freeze:
+        elif path and not freeze:
             # Read the requirements file and return the list of packages
             try:
-                with open(path_requirements, "r", encoding="utf-8") as file:
+                with open(path, "r", encoding="utf-8") as file:
                     packages = file.readlines()
                     # Filter empty line
                     filtered_packages = [x.strip() for x in packages if x.strip() != '' and '\n' in x]
