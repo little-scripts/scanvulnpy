@@ -16,7 +16,6 @@ jobs:
   CI:
 
     runs-on: ubuntu-latest
-    using: 'node20'
 
     steps:
     - name: Checkout
