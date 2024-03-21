@@ -55,4 +55,3 @@ class TestGetRequirements:
         # Check that the method returns the correct packages
         assert packages is None
         assert nb_packages == 0
-
