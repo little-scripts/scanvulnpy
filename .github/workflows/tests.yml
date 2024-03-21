@@ -34,16 +34,16 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=25 --max-line-length=512 --statistics
-    - name: Unit tests
+    - name: Run Unit tests and collect coverage
       uses: codecov/codecov-ats@v0
       env:
-        CODECOV_STATIC_TOKEN: ${{ secrets.CODECOV_STATIC_TOKEN }}
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-    - name: Run tests and collect coverage
       run: pytest -v -m smoke --cov app ${{ env.CODECOV_ATS_TESTS }}
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v4-beta
+      uses: codecov/codecov-action@v4.0.1
       with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        slug: little-scripts/scanvulnpy
         flags: smoke
         verbose: true
       env:
