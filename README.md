@@ -4,6 +4,9 @@
   <a target="_blank" rel="noopener noreferrer" href="https://pypi.org/project/scanvulnpy" title="">
     <img  alt="pip package version" src="https://img.shields.io/pypi/v/scanvulnpy?color=informational">
   </a>
+  <a target="_blank" rel="noopener noreferrer" href="https://codecov.io/github/little-scripts/scanvulnpy/branch/main/graph/badge.svg?token=tkq655ROg3" title="">
+    <img  alt="codecov" src="https://app.codecov.io/github/little-scripts/scanvulnpy">
+  </a>
   <a target="_blank" rel="noopener noreferrer" href="https://pypi.org/project/scanvulnpy" title="">
     <img alt="Python3.7" src="https://img.shields.io/badge/Python-3.7+-informational">
   </a>
