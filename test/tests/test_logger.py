@@ -6,10 +6,10 @@ import pytest
 from scanvulnpy.scanvulnpy.modules.loggers import Logger
 
 
+@pytest.mark.smoke
 class TestLogger:
     """Test cases for Logger."""
 
-    @pytest.mark.smoke
     def test_logger_info(self, logger, capsys):
         logger.info("This is a test message.")
         captured = capsys.readouterr()
@@ -17,7 +17,6 @@ class TestLogger:
         assert "INFO" in captured.out
         assert "This is a test message." in captured.out
 
-    @pytest.mark.smoke
     def test_logger_success(self, logger, capsys):
         logger.success("This is a test message.")
         captured = capsys.readouterr()
@@ -25,7 +24,6 @@ class TestLogger:
         assert "SUCCESS" in captured.out
         assert "This is a test message." in captured.out
 
-    @pytest.mark.smoke
     def test_logger_debug(self, logger, capsys):
         logger.debug("This is a test message.")
         captured = capsys.readouterr()
@@ -33,7 +31,6 @@ class TestLogger:
         assert "DEBUG" in captured.out
         assert "This is a test message." in captured.out
 
-    @pytest.mark.smoke
     def test_logger_warning(self, logger, capsys):
         logger.warning("This is a test message.")
         captured = capsys.readouterr()
@@ -41,7 +38,6 @@ class TestLogger:
         assert "WARN" in captured.out
         assert "This is a test message." in captured.out
 
-    @pytest.mark.smoke
     def test_logger_error(self, logger, capsys):
         logger.error("This is a test message.")
         captured = capsys.readouterr()

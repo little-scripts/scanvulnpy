@@ -6,10 +6,10 @@ import pytest
 from scanvulnpy.scanvulnpy.modules.utils import Utils
 
 
+@pytest.mark.smoke
 class TestHeaders:
     """Test cases for version file attributes."""
 
-    @pytest.mark.smoke
     @pytest.mark.parametrize("user_agent", ["Mozilla/5.0", "Chrome/95.0.4638.69", "Safari/537.36"])
     def test_set_headers(self, utils, user_agent):
         headers = utils.set_headers(user_agent)

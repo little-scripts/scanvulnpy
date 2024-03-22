@@ -6,10 +6,10 @@ import pytest
 from scanvulnpy.scanvulnpy import __version__
 
 
+@pytest.mark.smoke
 class TestVersionFile:
     """Test cases for version file attributes."""
 
-    @pytest.mark.smoke
     def test_version_attributes(self):
         """Check if version file attributes match expected values."""
         version = __version__
