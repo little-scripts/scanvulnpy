@@ -64,7 +64,4 @@ def cmd_options():
 
     options = parser.parse_args()
 
-    if options.requirements is not False:
-        options.freeze = False
-
     return options

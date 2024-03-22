@@ -2,10 +2,9 @@
 Test Platform
 """
 
-import os
-import io
 import pytest
 from scanvulnpy.scanvulnpy.modules.utils import Utils
+
 
 @pytest.mark.smoke
 class TestCheckPlatform:
