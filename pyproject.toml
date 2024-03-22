@@ -12,7 +12,7 @@ authors = [
 ]
 
 # Versions
-version = "0.1.0"  # 0.1.0.dev1 | 0.1.0a1 | 0.1.0.b1 | 0.1.0rc | 0.1.0
+version = "0.1.1"  # 0.1.0.dev1 | 0.1.0a1 | 0.1.0.b1 | 0.1.0rc | 0.1.0
 
 maintainers = [
   {name = "little-scripts", email = "jgdevrennes@gmail.com"}
