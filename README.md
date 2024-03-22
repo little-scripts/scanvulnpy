@@ -11,7 +11,7 @@
     <img alt="CI" src="https://github.com/little-scripts/scanvulnpy/actions/workflows/tests.yml/badge.svg?branch=main">
   </a>
   <a target="_blank" rel="noopener noreferrer" href="https://app.codecov.io/github/little-scripts/scanvulnpy/tree/main" title="">
-    <img  alt="Codecov" src="https://codecov.io/github/little-scripts/scanvulnpy/branch/main/graph/badge.svg?token=tkq655ROg3">
+    <img  alt="Codecov" src="https://codecov.io/github/little-scripts/scanvulnpy/branch/main/graph/badge.svg?token=32QM9ZW11E">
   </a>
   <a target="_blank" rel="noopener noreferrer" href="https://pypi.org/project/scanvulnpy" title="">
     <img  alt="PyPI Downloads" src="https://img.shields.io/pypi/dm/scanvulnpy.svg?label=PyPI%20downloads">
