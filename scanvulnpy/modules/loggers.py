@@ -36,38 +36,34 @@ class Logger:
 
     def __init__(self):
         """Init Class Level."""
+        pass
 
     def info(self, message):
-        """docstring
-        """
+        """This is a info message"""
         current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S:%f')
         console.print("{} | {}INFO{} | {}".format(current_date, "[bold grey]", "[/bold grey]", message),
                       highlight=False, overflow="ignore", crop=False)
 
     def success(self, message):
-        """docstring
-        """
+        """This is a success message"""
         current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S:%f')
         console.print("{} | {}SUCCESS{} | {}".format(current_date, "[bold green]", "[/bold green]", message),
                       highlight=False, overflow="ignore", crop=False)
 
     def debug(self, message):
-        """docstring
-        """
+        """This is a debug message"""
         current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S:%f')
         console.print("{} | {}DEBUG{} | {}".format(current_date, "[bold yellow]", "[/bold yellow]", message),
                       highlight=False, overflow="ignore", crop=False)
 
     def warning(self, message):
-        """docstring
-        """
+        """This is a warning message"""
         current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S:%f')
         console.print("{} | {}WARN{} | {}".format(current_date, "[bold orange3]", "[/bold orange3]", message),
                       highlight=False, overflow="ignore", crop=False)
 
     def error(self, message):
-        """docstring
-        """
+        """This is a error message"""
         current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S:%f')
         console.print("{} | {}ERROR{} | {}".format(current_date, "[bold red]", "[/bold red]", message), highlight=False,
                       overflow="ignore", crop=False)

@@ -3,7 +3,8 @@ Configuration / Settings pytest
 """
 
 import pytest
-from scanvulnpy.scanvulnpy.modules.utils import Utils
+from scanvulnpy.scanvulnpy.modules.utils import Utils, Logger
+
 
 # ----------------------------------------------------------------
 # Parser
@@ -25,9 +26,18 @@ def environment(request):
     """
     return request.config.getoption("--env")
 
+
 @pytest.fixture(scope="function")
 def utils():
     """
-    Fixture platform.
+    Fixture Utils.
     """
     return Utils()
+
+
+@pytest.fixture(scope="function")
+def logger():
+    """
+    Fixture Logger.
+    """
+    return Logger()
