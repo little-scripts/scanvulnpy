@@ -126,20 +126,19 @@ class Utils:
         else:
             return False
 
-    def get_requirements(self, path: str = None, freeze: bool = False):
+    def get_requirements(self, path: str = False):
         """
         Retrieves the list of packages from the requirements file.
 
         Args:
             path (str): Path to requirements file.
-            freeze (bool): pip freeze local requirements.
 
         Returns:
             list: List of package names and versions.
         """
-        # Get the path to the requirements file from the configuration
         # If no requirements file specified and freezing packages is enabled
-        if not path and freeze:
+        if path is False:
+            freeze = True
             # Use 'pip freeze' command to generate requirements list with installed packages
             cmd = 'pip freeze'
             output = os.popen(cmd).read()
@@ -148,7 +147,8 @@ class Utils:
             nb_packages = len(packages)
             return packages, nb_packages
 
-        elif path and not freeze:
+        elif path is not False:
+            freeze = False
             # Read the requirements file and return the list of packages
             try:
                 with open(path, "r", encoding="utf-8") as file:
@@ -160,9 +160,9 @@ class Utils:
 
             except Exception as e:
                 self.logger.error(f"{e} ! Please check the path you send !")
-                return None, 0
+                return None, False
         else:
-            return None, 0
+            return None, False
 
     def set_payload(self, package: str = None) -> Tuple[Optional[dict], Optional[str]]:
         """

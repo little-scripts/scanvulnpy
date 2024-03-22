@@ -50,9 +50,9 @@ def main():
     scandal = VulnerabilityScanner()
     logger = Logger()
 
-    # Get packages
+    # Get the path to the requirements file from the configuration
     logger.info("Get PyPI packages, this may take few seconds...")
-    packages, nb_packages = utils.get_requirements(options.requirements, options.freeze)
+    packages, nb_packages = utils.get_requirements(options.requirements)
     if not packages:
         sys.exit(1)
 

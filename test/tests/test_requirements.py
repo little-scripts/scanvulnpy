@@ -21,7 +21,7 @@ class TestGetRequirements:
         requirements_file.write_text("package1\npackage2\npackage3\n")
 
         # Call the get_requirements method with a file path and freeze set to False
-        packages, nb_packages = utils.get_requirements(str(requirements_file), freeze=False)
+        packages, nb_packages = utils.get_requirements(str(requirements_file))
 
         # Check that the method returns the correct packages
         assert packages == ["package1", "package2", "package3"]
@@ -41,7 +41,7 @@ class TestGetRequirements:
         monkeypatch.setattr(os, "popen", lambda cmd: mock_output)
 
         # Call the get_requirements method without a file path and freeze set to True
-        packages, nb_packages = utils.get_requirements(path=None, freeze=True)
+        packages, nb_packages = utils.get_requirements(path=False)
 
         # Check that the method returns the correct packages
         assert packages == ["packageA", "packageB", "packageC"]
@@ -50,7 +50,7 @@ class TestGetRequirements:
     def test_get_requirements_without_path_and_no_freeze(self, utils, monkeypatch):
         """Test the get_requirements method without a file path and freeze set to False."""
         # Call the get_requirements method without a file path and freeze set to False
-        packages, nb_packages = utils.get_requirements(path=None, freeze=False)
+        packages, nb_packages = utils.get_requirements(path=None)
 
         # Check that the method returns the correct packages
         assert packages is None
