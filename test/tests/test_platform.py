@@ -3,7 +3,7 @@ Test Platform
 """
 
 import pytest
-from scanvulnpy.scanvulnpy.modules.utils import Utils
+from ...scanvulnpy.modules.utils import Utils
 
 
 @pytest.mark.smoke

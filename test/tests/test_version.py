@@ -3,7 +3,7 @@ This Version
 """
 
 import pytest
-from scanvulnpy.scanvulnpy import __version__
+from ...scanvulnpy import __version__
 
 
 @pytest.mark.smoke

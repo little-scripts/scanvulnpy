@@ -17,13 +17,16 @@
 
 
 """
-Module VulnerabilityScanner
+Module ScannerVulnerability
 """
 
 import sys
 
 try:
     import requests
+    import os
+    import re
+    from typing import Optional, Tuple
 except ModuleNotFoundError as e:
     print("Mandatory dependencies are missing:", e)
     print("Install: python -m pip install --upgrade <module-named>")
@@ -32,13 +35,12 @@ except ModuleNotFoundError as e:
 from .loggers import Logger
 
 
-class VulnerabilityScanner:
-    """Controller class for VulnerabilityScanner."""
+class ScannerVulnerability:
+    """Controller class for ScannerVulnerability."""
 
     def __init__(self):
         self.logger = Logger()
-        # API endpoint for vulnerability Scanning
-        self.url = 'https://api.osv.dev/v1/query'
+        self.url = 'https://api.osv.dev/v1/query'  # API endpoint for vulnerability Scanning
 
     def __repr__(self):
         return "__repr__ Scanner: [logger={self.logger}]"
@@ -142,3 +144,69 @@ class VulnerabilityScanner:
             json: response.
         """
         return requests.post(self.url, json=payload, headers=header, timeout=10)
+
+    def get_requirements(self, path: str = False):
+        """
+        Retrieves the list of packages from the requirements file.
+
+        Args:
+            path (str): Path to requirements file.
+
+        Returns:
+            list: List of package names and versions.
+        """
+        # If no requirements file specified and freezing packages is enabled
+        if path is False:
+            freeze = True
+            # Use 'pip freeze' command to generate requirements list with installed packages
+            cmd = 'pip freeze'
+            output = os.popen(cmd).read()
+            packages = output.split('\n')
+            packages.remove(packages[-1])
+            nb_packages = len(packages)
+            return packages, nb_packages
+
+        elif path is not False:
+            freeze = False
+            # Read the requirements file and return the list of packages
+            try:
+                with open(path, "r", encoding="utf-8") as file:
+                    packages = file.readlines()
+                    # Filter empty line
+                    filtered_packages = [x.strip() for x in packages if x.strip() != '' and '\n' in x]
+                    nb_packages = len(filtered_packages)
+                return filtered_packages, nb_packages
+
+            except Exception as e:
+                self.logger.error(f"{e} ! Please check the path you send !")
+                return None, False
+        else:
+            return None, False
+
+    def set_payload(self, package: str = None) -> Tuple[Optional[dict], Optional[str]]:
+        """
+        Sets the payload for a given package.
+
+        Args:
+            package (str): The name and version of the package.
+
+        Returns:
+            tuple: A tuple containing the payload and the package version.
+        """
+        payload = None
+        version = None
+
+        if package and re.match(r'^[a-zA-Z0-9_.-]+(?:==[0-9]+(?:\.[0-9]+)*(?:\.\w+)?)?$', package):
+            if '==' in package:
+                package_name, version = package.split('==')
+                payload = {"version": version, "package": {"name": package_name, "ecosystem": "PyPI"}}
+            elif '>=' in package or '<=' in package:
+                self.logger.error(
+                    f"{package}! Retry with a specific version (e.g., request==2.31.0) in your requirements.")
+            else:
+                package_name = package.split()[0]
+                payload = {"package": {"name": package_name, "ecosystem": "PyPI"}}
+        else:
+            self.logger.error(f"Invalid package format: {package} Retry with a valid package name.")
+
+        return payload, version

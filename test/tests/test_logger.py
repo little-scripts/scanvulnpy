@@ -3,7 +3,7 @@ This Loger
 """
 
 import pytest
-from scanvulnpy.scanvulnpy.modules.loggers import Logger
+from ...scanvulnpy.modules.loggers import Logger
 
 
 @pytest.mark.smoke
