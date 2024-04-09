@@ -1,9 +1,13 @@
 # ChangeLog
 
+## 0.1.1 (2024-03-22)
+### Patch
+- Command in README.md
+
 ## 0.1.0 (2024-03-22)
 ### Improvement
 - Add Codecov
-- 
+
 ## 0.1.0rc5 (2024-03-20)
 ### Improvement
 - Progress bar stdout
