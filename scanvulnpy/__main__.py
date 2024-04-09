@@ -23,7 +23,7 @@ Scanner vulnerability PyPI Packages, the data provided by https://osv.dev
 import sys
 import os
 from .modules.utils import Utils
-from .modules.scanner import VulnerabilityScanner
+from .modules.scanner import ScannerVulnerability
 from .modules.banners import print_banner
 from .modules.cmd import cmd_options
 from .modules.loggers import Logger
@@ -47,12 +47,12 @@ def main():
     # Setup (Instantiate Object)
     options = cmd_options()
     utils = Utils()
-    scandal = VulnerabilityScanner()
+    scanvulns = ScannerVulnerability()
     logger = Logger()
 
     # Get the path to the requirements file from the configuration
     logger.info("Get PyPI packages, this may take few seconds...")
-    packages, nb_packages = utils.get_requirements(options.requirements)
+    packages, nb_packages = scanvulns.get_requirements(options.requirements)
     if not packages:
         sys.exit(1)
 
@@ -73,29 +73,30 @@ def main():
         if package != '':
 
             # Set payload and header for request the API endpoint
-            payload, version = utils.set_payload(package)
-            user_agent = utils.set_random_user_agent()
-            header = utils.set_headers(user_agent)
+            payload, version = scanvulns.set_payload(package)
 
             # If payload send POST request to the API endpoint
             if payload:
-                response = scandal.request_api_osv(payload, header)
+                user_agent = utils.set_random_user_agent()
+                header = utils.set_headers(user_agent)
+                response = scanvulns.request_api_osv(payload, header)
+
                 if options.verbose != 'package':
                     count_progress_bar += 1
                     utils.progress_bar(count_progress_bar, nb_packages)
 
                 # Log the Scan results and update counters and lists
                 (nb_packages, count_non_vulnerable, count_vulnerability, list_packages_vulnerable,
-                 list_packages_non_vulnerable) = scandal.store_result(nb_packages, options.verbose, response,
-                                                                      payload, package, version,
-                                                                      count_vulnerability, count_non_vulnerable,
-                                                                      list_packages_vulnerable,
-                                                                      list_packages_non_vulnerable)
+                 list_packages_non_vulnerable) = scanvulns.store_result(nb_packages, options.verbose, response,
+                                                                        payload, package, version,
+                                                                        count_vulnerability, count_non_vulnerable,
+                                                                        list_packages_vulnerable,
+                                                                        list_packages_non_vulnerable)
 
     # Log the final results based on the number of vulnerabilities found
     logger.info("Scan done ")
-    scandal.display_results(count_non_vulnerable, count_vulnerability, list_packages_vulnerable,
-                            list_packages_non_vulnerable)
+    scanvulns.display_results(count_non_vulnerable, count_vulnerability, list_packages_vulnerable,
+                              list_packages_non_vulnerable)
 
 
 if __name__ == '__main__':

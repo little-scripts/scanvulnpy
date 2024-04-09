@@ -3,7 +3,8 @@ Configuration / Settings pytest
 """
 
 import pytest
-from scanvulnpy.scanvulnpy.modules.utils import Utils, Logger
+from ..scanvulnpy.modules.utils import Utils, Logger
+from ..scanvulnpy.modules.scanner import ScannerVulnerability
 
 
 # ----------------------------------------------------------------
@@ -41,3 +42,11 @@ def logger():
     Fixture Logger.
     """
     return Logger()
+
+
+@pytest.fixture(scope="function")
+def scanner():
+    """
+    Fixture VulnerabilityScanner.
+    """
+    return ScannerVulnerability()
