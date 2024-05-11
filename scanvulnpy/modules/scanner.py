@@ -27,6 +27,7 @@ try:
     import os
     import re
     from typing import Optional, Tuple
+    from dataclasses import dataclass
 except ModuleNotFoundError as e:
     print("Mandatory dependencies are missing:", e)
     print("Install: python -m pip install --upgrade <module-named>")
@@ -35,15 +36,12 @@ except ModuleNotFoundError as e:
 from .loggers import Logger
 
 
+@dataclass
 class ScannerVulnerability:
     """Controller class for ScannerVulnerability."""
 
-    def __init__(self):
-        self.logger = Logger()
-        self.url = 'https://api.osv.dev/v1/query'  # API endpoint for vulnerability Scanning
-
-    def __repr__(self):
-        return "__repr__ Scanner: [logger={self.logger}]"
+    logger = Logger()
+    url = 'https://api.osv.dev/v1/query'  # API endpoint for vulnerability Scanning
 
     def store_result(self, nb_packages: int = None, verbose: str = None,
                      response: str = None, payload: dict = None, package: str = None, version: str = None,

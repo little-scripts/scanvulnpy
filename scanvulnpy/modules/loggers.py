@@ -21,6 +21,7 @@ Module logger
 
 import sys
 from datetime import datetime
+from dataclasses import dataclass
 
 try:
     from rich.console import Console
@@ -31,15 +32,12 @@ except ModuleNotFoundError as e:
     sys.exit(1)
 
 
+@dataclass
 class Logger:
     """Controller class for Level."""
 
-    def __init__(self):
-        """Init Class Level."""
-        pass
-
     def info(self, message):
-        """This is a info message"""
+        """This is an info message"""
         current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S:%f')
         console.print("{} | {}INFO{} | {}".format(current_date, "[bold grey]", "[/bold grey]", message),
                       highlight=False, overflow="ignore", crop=False)
@@ -63,7 +61,7 @@ class Logger:
                       highlight=False, overflow="ignore", crop=False)
 
     def error(self, message):
-        """This is a error message"""
+        """This is an error message"""
         current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S:%f')
         console.print("{} | {}ERROR{} | {}".format(current_date, "[bold red]", "[/bold red]", message), highlight=False,
                       overflow="ignore", crop=False)

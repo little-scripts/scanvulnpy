@@ -24,17 +24,15 @@ import os
 import platform
 from fake_useragent import UserAgent
 from .loggers import Logger
+from dataclasses import dataclass
 
 
+@dataclass
 class Utils:
     """Controller class for Utils."""
 
-    def __init__(self) -> None:
-        self.platform_os = os.name
-        self.logger = Logger()
-
-    def __repr__(self):
-        return f"__repr__ Utils: [platform_os={self.platform_os}, logger={self.logger}]"
+    platform_os = os.name
+    logger = Logger()
 
     @staticmethod
     def is_platform_windows():
