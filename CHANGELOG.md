@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 0.2.1 (2024-05-31)
+### Patch
+- Security update: Bump requests from 2.31.0 to 2.32.2
+
 ## 0.1.1 (2024-03-22)
 ### Patch
 - Command in README.md
